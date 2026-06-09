@@ -1,639 +1,1228 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>UTK</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <link rel="icon" href="{{ url_for('static', filename='IMAGE/logo.jpg') }}" />
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: linear-gradient(135deg, #0a0a0a 0%, #0f0f0f 100%);
-      color: #e0e0e0;
-      font-family: 'Inter', sans-serif;
-      line-height: 1.5;
-    }
-
-    /* Header */
-    .admin-header {
-      background: rgba(10, 10, 10, 0.95);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(232, 98, 42, 0.2);
-      padding: 1rem 2rem;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .logo h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #fff 0%, #e8622a 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .logo span {
-      font-size: 0.85rem;
-      color: #e8622a;
-      display: block;
-      font-weight: 400;
-      letter-spacing: 1px;
-    }
-
-    .logout-btn {
-      background: rgba(232, 98, 42, 0.1);
-      border: 1px solid rgba(232, 98, 42, 0.3);
-      color: #e8622a;
-      padding: 0.6rem 1.2rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .logout-btn:hover {
-      background: #e8622a;
-      color: #fff;
-      transform: translateY(-2px);
-    }
-
-    /* Main Container */
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-
-    /* Section Styles */
-    .section {
-      background: rgba(20, 20, 25, 0.6);
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 16px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-      transition: all 0.3s ease;
-    }
-
-    .section:hover {
-      border-color: rgba(232, 98, 42, 0.3);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    }
-
-    .section-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-      color: #e8622a;
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      border-bottom: 2px solid rgba(232, 98, 42, 0.3);
-      padding-bottom: 0.75rem;
-    }
-
-    .section-title i {
-      font-size: 1.3rem;
-    }
-
-    /* Form Grid */
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.2rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .field label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #888;
-    }
-
-    .field input,
-    .field textarea,
-    .field select {
-      background: rgba(10, 10, 12, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 0.75rem 1rem;
-      color: #fff;
-      font-size: 0.9rem;
-      font-family: 'Inter', monospace;
-      transition: all 0.3s ease;
-    }
-
-    .field input:focus,
-    .field textarea:focus,
-    .field select:focus {
-      outline: none;
-      border-color: #e8622a;
-      box-shadow: 0 0 0 3px rgba(232, 98, 42, 0.1);
-    }
-
-    .field textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
-
-    /* Buttons */
-    .btn {
-      margin-top: 0.5rem;
-      padding: 0.7rem 1.4rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      white-space: nowrap;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #e8622a, #c9521f);
-      color: #fff;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(232, 98, 42, 0.3);
-    }
-
-    .btn-success {
-      background: rgba(74, 222, 128, 0.15);
-      border: 1px solid rgba(74, 222, 128, 0.3);
-      color: #4ade80;
-    }
-
-    .btn-success:hover {
-      background: #4ade80;
-      color: #000;
-      transform: translateY(-2px);
-    }
-
-    .btn-danger {
-      background: rgba(248, 113, 113, 0.15);
-      border: 1px solid rgba(248, 113, 113, 0.3);
-      color: #f87171;
-    }
-
-    .btn-danger:hover {
-      background: #f87171;
-      color: #000;
-      transform: translateY(-2px);
-    }
-
-    .btn-warning {
-      background: rgba(96, 165, 250, 0.15);
-      border: 1px solid rgba(96, 165, 250, 0.3);
-      color: #60a5fa;
-    }
-
-    .btn-warning:hover {
-      background: #60a5fa;
-      color: #000;
-      transform: translateY(-2px);
-    }
-
-    /* Cards Grid */
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1rem;
-      margin-top: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .admin-card {
-      background: rgba(15, 15, 20, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 1.25rem;
-      transition: all 0.3s ease;
-    }
-
-    .admin-card:hover {
-      border-color: rgba(232, 98, 42, 0.4);
-      transform: translateY(-3px);
-    }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .card-title {
-      font-weight: 700;
-      font-size: 1rem;
-      color: #e8622a;
-    }
-
-    /* Video Rows */
-    .video-row {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-      margin-bottom: 0.75rem;
-      flex-wrap: wrap;
-    }
-
-    .video-row input {
-      flex: 1;
-      min-width: 150px;
-      background: rgba(5, 5, 8, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 6px;
-      padding: 0.5rem 0.75rem;
-      color: #fff;
-      font-size: 0.8rem;
-    }
-
-    /* Messages */
-    .msg {
-      margin-top: 1rem;
-      padding: 0.75rem;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      display: none;
-    }
-
-    .msg.success {
-      background: rgba(74, 222, 128, 0.1);
-      border: 1px solid rgba(74, 222, 128, 0.3);
-      color: #4ade80;
-      display: block;
-    }
-
-    .msg.error {
-      background: rgba(248, 113, 113, 0.1);
-      border: 1px solid rgba(248, 113, 113, 0.3);
-      color: #f87171;
-      display: block;
-    }
-
-    /* Add Section */
-    .add-section {
-      margin-top: 1.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .container {
-        padding: 1rem;
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>UTK</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='IMAGE/logo.jpg') }}"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
-      .section {
-        padding: 1.25rem;
+      /* ── THEME VARIABLES ── */
+      :root {
+        --bg: linear-gradient(135deg, #0a0a0a 0%, #0f0f0f 100%);
+        --text: #e0e0e0;
+        --header-bg: rgba(10, 10, 10, 0.95);
+        --section-bg: rgba(20, 20, 25, 0.6);
+        --card-bg: rgba(15, 15, 20, 0.8);
+        --input-bg: rgba(10, 10, 12, 0.8);
+        --input-border: rgba(255, 255, 255, 0.1);
+        --input-color: #fff;
+        --label-color: #888;
+        --video-input-bg: rgba(5, 5, 8, 0.8);
+        --card-border: rgba(255, 255, 255, 0.08);
+        --add-border: rgba(255, 255, 255, 0.05);
+        --scrollbar-track: #1a1a1a;
       }
 
-      .cards-grid {
-        grid-template-columns: 1fr;
+      body.day {
+        --bg: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
+        --text: #1a1a1a;
+        --header-bg: rgba(255, 255, 255, 0.95);
+        --section-bg: rgba(255, 255, 255, 0.85);
+        --card-bg: rgba(245, 245, 248, 0.95);
+        --input-bg: rgba(255, 255, 255, 0.9);
+        --input-border: rgba(0, 0, 0, 0.15);
+        --input-color: #1a1a1a;
+        --label-color: #555;
+        --video-input-bg: rgba(240, 240, 245, 0.9);
+        --card-border: rgba(0, 0, 0, 0.1);
+        --add-border: rgba(0, 0, 0, 0.08);
+        --scrollbar-track: #ddd;
       }
 
-      .form-grid {
-        grid-template-columns: 1fr;
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Inter", sans-serif;
+        line-height: 1.5;
+        transition:
+          background 0.3s,
+          color 0.3s;
       }
 
+      /* Header */
       .admin-header {
-        padding: 1rem;
+        background: var(--header-bg);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(232, 98, 42, 0.2);
+        padding: 1rem 2rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        transition: background 0.3s;
       }
 
       .logo h1 {
-        font-size: 1.2rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        background: linear-gradient(135deg, #fff 0%, #e8622a 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
       }
 
-      .btn {
-        padding: 0.6rem 1rem;
-        font-size: 0.8rem;
+      body.day .logo h1 {
+        background: linear-gradient(135deg, #333 0%, #e8622a 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
       }
 
-      .video-row {
+      .logo span {
+        font-size: 0.85rem;
+        color: #e8622a;
+        display: block;
+        font-weight: 400;
+        letter-spacing: 1px;
+      }
+
+      .logout-btn {
+        background: rgba(232, 98, 42, 0.1);
+        border: 1px solid rgba(232, 98, 42, 0.3);
+        color: #e8622a;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .logout-btn:hover {
+        background: #e8622a;
+        color: #fff;
+        transform: translateY(-2px);
+      }
+
+      /* Theme toggle */
+      .theme-toggle {
+        background: none;
+        border: 1px solid rgba(232, 98, 42, 0.3);
+        border-radius: 8px;
+        padding: 0.6rem 0.9rem;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        line-height: 1;
+      }
+
+      .theme-toggle:hover {
+        background: rgba(232, 98, 42, 0.1);
+        transform: translateY(-2px);
+      }
+
+      /* Main Container */
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      /* Section Styles */
+      .section {
+        background: var(--section-bg);
+        backdrop-filter: blur(5px);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+      }
+
+      .section:hover {
+        border-color: rgba(232, 98, 42, 0.3);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+
+      .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+        color: #e8622a;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        border-bottom: 2px solid rgba(232, 98, 42, 0.3);
+        padding-bottom: 0.75rem;
+      }
+
+      .section-title i {
+        font-size: 1.3rem;
+      }
+
+      /* Form Grid */
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.2rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .field {
+        display: flex;
         flex-direction: column;
-        align-items: stretch;
+        gap: 0.5rem;
       }
 
-      .video-row input {
-        width: 100%;
+      .field label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--label-color);
+      }
+
+      .field input,
+      .field textarea,
+      .field select {
+        background: var(--input-bg);
+        border: 1px solid var(--input-border);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        color: var(--input-color);
+        font-size: 0.9rem;
+        font-family: "Inter", monospace;
+        transition: all 0.3s ease;
+      }
+
+      .field input:focus,
+      .field textarea:focus,
+      .field select:focus {
+        outline: none;
+        border-color: #e8622a;
+        box-shadow: 0 0 0 3px rgba(232, 98, 42, 0.1);
+      }
+
+      .field textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      /* Buttons */
+      .btn {
+        margin-top: 0.5rem;
+        padding: 0.7rem 1.4rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        white-space: nowrap;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #e8622a, #c9521f);
+        color: #fff;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(232, 98, 42, 0.3);
+      }
+
+      .btn-success {
+        background: rgba(74, 222, 128, 0.15);
+        border: 1px solid rgba(74, 222, 128, 0.3);
+        color: #4ade80;
+      }
+
+      .btn-success:hover {
+        background: #4ade80;
+        color: #000;
+        transform: translateY(-2px);
+      }
+
+      .btn-danger {
+        background: rgba(248, 113, 113, 0.15);
+        border: 1px solid rgba(248, 113, 113, 0.3);
+        color: #f87171;
+      }
+
+      .btn-danger:hover {
+        background: #f87171;
+        color: #000;
+        transform: translateY(-2px);
+      }
+
+      .btn-warning {
+        background: rgba(96, 165, 250, 0.15);
+        border: 1px solid rgba(96, 165, 250, 0.3);
+        color: #60a5fa;
+      }
+
+      .btn-warning:hover {
+        background: #60a5fa;
+        color: #000;
+        transform: translateY(-2px);
+      }
+
+      /* Cards Grid */
+      .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .admin-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        padding: 1.25rem;
+        transition: all 0.3s ease;
+      }
+
+      .admin-card:hover {
+        border-color: rgba(232, 98, 42, 0.4);
+        transform: translateY(-3px);
       }
 
       .card-header {
-        flex-direction: column;
-        align-items: stretch;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
       }
-    }
 
-    @media (max-width: 480px) {
-      .section-title {
+      .card-title {
+        font-weight: 700;
         font-size: 1rem;
+        color: #e8622a;
       }
 
-      .admin-header {
-        flex-direction: column;
-        text-align: center;
+      /* Video Rows */
+      .video-row {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        margin-bottom: 0.75rem;
+        flex-wrap: wrap;
       }
 
-      .btn {
-        width: 100%;
-        justify-content: center;
+      .video-row input {
+        flex: 1;
+        min-width: 150px;
+        background: var(--video-input-bg);
+        border: 1px solid var(--input-border);
+        border-radius: 6px;
+        padding: 0.5rem 0.75rem;
+        color: var(--input-color);
+        font-size: 0.8rem;
       }
-    }
 
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
+      /* Messages */
+      .msg {
+        margin-top: 1rem;
+        padding: 0.75rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        display: none;
+      }
 
-    ::-webkit-scrollbar-track {
-      background: #1a1a1a;
-    }
+      .msg.success {
+        background: rgba(74, 222, 128, 0.1);
+        border: 1px solid rgba(74, 222, 128, 0.3);
+        color: #4ade80;
+        display: block;
+      }
 
-    ::-webkit-scrollbar-thumb {
-      background: #e8622a;
-      border-radius: 4px;
-    }
+      .msg.error {
+        background: rgba(248, 113, 113, 0.1);
+        border: 1px solid rgba(248, 113, 113, 0.3);
+        color: #f87171;
+        display: block;
+      }
 
-    ::-webkit-scrollbar-thumb:hover {
-      background: #c9521f;
-    }
-  </style>
-</head>
-<body>
+      /* Add Section */
+      .add-section {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--add-border);
+      }
 
-<header class="admin-header">
-  <div class="logo">
-    <h1>UTK</h1>
-  </div>
-  <a href="/logout" class="logout-btn">
-    <i class="fas fa-sign-out-alt"></i>
-    Logout
-  </a>
-</header>
+      /* Responsive */
+      @media (max-width: 768px) {
+        .container {
+          padding: 1rem;
+        }
 
-<main class="container">
-  <!-- VISITS LOG SECTION -->
-  <section class="section">
-    <div class="section-title">
-      <i class="fas fa-chart-line"></i>
-      <span>Visitor Logs</span>
-      <button class="btn btn-danger" onclick="clearVisits()" style="margin-left:auto;font-size:0.75rem;padding:0.4rem 0.8rem;">
-        <i class="fas fa-trash"></i> Clear All
-      </button>
-    </div>
-    <div id="visit-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1rem;margin-bottom:1.5rem;"></div>
-    <div style="overflow-x:auto;">
-      <table id="visits-table" style="width:100%;border-collapse:collapse;font-size:0.82rem;">
-        <thead>
-          <tr style="border-bottom:1px solid rgba(255,255,255,0.08);color:#888;text-align:left;">
-            <th style="padding:0.5rem 0.75rem;">Time (UTC)</th>
-            <th style="padding:0.5rem 0.75rem;">Visitor</th>
-            <th style="padding:0.5rem 0.75rem;">IP</th>
-            <th style="padding:0.5rem 0.75rem;">Page</th>
-            <th style="padding:0.5rem 0.75rem;">Referrer</th>
-            <th style="padding:0.5rem 0.75rem;">User Agent</th>
-          </tr>
-        </thead>
-        <tbody id="visits-body"></tbody>
-      </table>
-    </div>
-    <div id="visits-pagination" style="display:flex;gap:0.5rem;margin-top:1rem;align-items:center;"></div>
-    <p class="msg" id="visits-msg"></p>
-  </section>
+        .section {
+          padding: 1.25rem;
+        }
 
-  <!-- INBOX SECTION -->
-  <section class="section">
-    <div class="section-title">
-      <i class="fas fa-inbox"></i>
-      <span>Messages Inbox</span>
-      <span id="unread-badge" style="background:#e8622a;color:#fff;font-size:0.75rem;padding:0.2rem 0.6rem;border-radius:100px;margin-left:auto;"></span>
-    </div>
-    <div id="inbox-wrap"></div>
-    <p class="msg" id="inbox-msg"></p>
-  </section>
+        .cards-grid {
+          grid-template-columns: 1fr;
+        }
 
-  <!-- SKILLS SECTION -->
-  <section class="section">
-    <div class="section-title">
-      <i class="fas fa-chart-bar"></i>
-      <span>Skills & Tools</span>
-    </div>
-    <div id="skills-wrap" style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.5rem;"></div>
-    <div class="add-section">
-      <div class="form-grid">
-        <div class="field"><label>Skill / Tool Name</label><input id="sk-name" placeholder="e.g. Houdini" /></div>
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .admin-header {
+          padding: 1rem;
+        }
+
+        .logo h1 {
+          font-size: 1.2rem;
+        }
+
+        .btn {
+          padding: 0.6rem 1rem;
+          font-size: 0.8rem;
+        }
+
+        .video-row {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .video-row input {
+          width: 100%;
+        }
+
+        .card-header {
+          flex-direction: column;
+          align-items: stretch;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .section-title {
+          font-size: 1rem;
+        }
+
+        .admin-header {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .btn {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--scrollbar-track);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #e8622a;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: #c9521f;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="admin-header">
+      <div class="logo">
+        <h1>UTK</h1>
+      </div>
+      <div style="display: flex; align-items: center; gap: 0.75rem">
+        <button
+          class="theme-toggle"
+          id="theme-toggle"
+          onclick="toggleTheme()"
+          title="Toggle day/dark mode"
+        >
+          🌙
+        </button>
+        <a href="/" target="_blank" rel="noopener noreferrer" class="logout-btn" style="background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.3); color: #4ade80;">
+          <i class="fas fa-external-link-alt"></i>
+          View Site
+        </a>
+        <a href="/logout" class="logout-btn">
+          <i class="fas fa-sign-out-alt"></i>
+          Logout
+        </a>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- VISITS LOG SECTION -->
+      <section class="section">
+        <div class="section-title">
+          <i class="fas fa-chart-line"></i>
+          <span>Visitor Logs</span>
+          <button
+            class="btn btn-danger"
+            onclick="clearVisits()"
+            style="
+              margin-left: auto;
+              font-size: 0.75rem;
+              padding: 0.4rem 0.8rem;
+            "
+          >
+            <i class="fas fa-trash"></i> Clear All
+          </button>
+        </div>
+        <div
+          id="visit-stats"
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+          "
+        ></div>
+        <div style="overflow-x: auto">
+          <table
+            id="visits-table"
+            style="width: 100%; border-collapse: collapse; font-size: 0.82rem"
+          >
+            <thead>
+              <tr
+                style="
+                  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                  color: #888;
+                  text-align: left;
+                "
+              >
+                <th style="padding: 0.5rem 0.75rem">Time (Local)</th>
+                <th style="padding: 0.5rem 0.75rem">Visitor</th>
+                <th style="padding: 0.5rem 0.75rem">IP</th>
+                <th style="padding: 0.5rem 0.75rem">Page</th>
+                <th style="padding: 0.5rem 0.75rem">Referrer</th>
+                <th style="padding: 0.5rem 0.75rem">User Agent</th>
+              </tr>
+            </thead>
+            <tbody id="visits-body"></tbody>
+          </table>
+        </div>
+        <div
+          id="visits-pagination"
+          style="
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            align-items: center;
+          "
+        ></div>
+        <p class="msg" id="visits-msg"></p>
+      </section>
+
+      <!-- RATINGS SECTION -->
+      <section class="section">
+        <div class="section-title">
+          <i class="fas fa-star"></i>
+          <span>User Ratings & Feedback</span>
+        </div>
+        <div
+          id="ratings-stats"
+          style="
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+          "
+        >
+          <div
+            style="
+              background: rgba(232, 98, 42, 0.1);
+              padding: 1rem;
+              border-radius: 12px;
+              text-align: center;
+            "
+          >
+            <div
+              style="font-size: 2rem; font-weight: 700; color: #ffc107"
+              id="admin-avg-rating"
+            >
+              0.0
+            </div>
+            <div style="font-size: 0.8rem; color: #888">Average Rating</div>
+          </div>
+          <div
+            style="
+              background: rgba(232, 98, 42, 0.1);
+              padding: 1rem;
+              border-radius: 12px;
+              text-align: center;
+            "
+          >
+            <div
+              style="font-size: 2rem; font-weight: 700"
+              id="admin-total-ratings"
+            >
+              0
+            </div>
+            <div style="font-size: 0.8rem; color: #888">Total Ratings</div>
+          </div>
+        </div>
+        <div id="ratings-list"></div>
+        <p class="msg" id="ratings-msg"></p>
+      </section>
+
+      <!-- INBOX SECTION -->
+      <section class="section">
+        <div class="section-title">
+          <i class="fas fa-inbox"></i>
+          <span>Messages Inbox</span>
+          <span
+            id="unread-badge"
+            style="
+              background: #e8622a;
+              color: #fff;
+              font-size: 0.75rem;
+              padding: 0.2rem 0.6rem;
+              border-radius: 100px;
+              margin-left: auto;
+            "
+          ></span>
+        </div>
+        <div id="inbox-wrap"></div>
+        <p class="msg" id="inbox-msg"></p>
+      </section>
+
+      <!-- SKILLS SECTION -->
+      <section class="section">
+        <div class="section-title">
+          <i class="fas fa-chart-bar"></i>
+          <span>Skills & Tools</span>
+        </div>
+        <div
+          id="skills-wrap"
+          style="
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+          "
+        ></div>
+        <p style="font-size:0.75rem;color:#666;margin-bottom:0.5rem;">Drag to reorder</p>
+        <div class="add-section">
+          <div class="form-grid">
+            <div class="field">
+              <label>Skill / Tool Name</label
+              ><input id="sk-name" placeholder="e.g. Houdini" />
+            </div>
+            <div class="field">
+              <label>Proficiency: <span id="sk-level-display">85</span>%</label>
+              <input
+                id="sk-level"
+                type="range"
+                min="1"
+                max="100"
+                value="85"
+                oninput="
+                  document.getElementById('sk-level-display').textContent =
+                    this.value
+                "
+                style="width: 100%; accent-color: #e8622a"
+              />
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="addSkill()">
+            <i class="fas fa-plus-circle"></i> Add Skill
+          </button>
+        </div>
+        <p class="msg" id="skills-msg"></p>
+      </section>
+
+      <!-- COMPANIES SECTION -->
+      <section class="section">
+        <div class="section-title">
+          <i class="fas fa-building"></i>
+          <span>Companies Worked For</span>
+          <span style="font-size: 0.75rem; color: #888; margin-left: auto"
+            >Drag to reorder</span
+          >
+        </div>
+        <div
+          id="companies-wrap"
+          style="
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+          "
+        ></div>
+        <div class="add-section">
+          <div class="form-grid">
+            <div class="field">
+              <label>Company Name</label
+              ><input id="comp-name" placeholder="e.g. DNEG, MPC, Framestore" />
+            </div>
+            <div class="field">
+              <label>Logo Image URL</label
+              ><input
+                id="comp-url"
+                placeholder="https://example.com/logo.png"
+              />
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="addCompany()">
+            <i class="fas fa-plus-circle"></i> Add Company
+          </button>
+        </div>
+        <p class="msg" id="companies-msg"></p>
+      </section>
+
+      <!-- ABOUT SECTION -->
+      <section class="section">
+        <div class="section-title">
+          <i class="fas fa-user-circle"></i>
+          <span>About</span>
+          <label
+            style="
+              margin-left: auto;
+              display: flex;
+              align-items: center;
+              gap: 0.6rem;
+              cursor: pointer;
+              font-size: 0.85rem;
+              font-weight: 600;
+            "
+          >
+            <span style="color: #888">Available for Work</span>
+            <div
+              id="avail-toggle"
+              onclick="toggleAvailable()"
+              style="
+                width: 44px;
+                height: 24px;
+                border-radius: 100px;
+                background: #333;
+                position: relative;
+                cursor: pointer;
+                transition: background 0.3s;
+                flex-shrink: 0;
+              "
+            >
+              <div
+                id="avail-knob"
+                style="
+                  width: 18px;
+                  height: 18px;
+                  border-radius: 50%;
+                  background: #fff;
+                  position: absolute;
+                  top: 3px;
+                  left: 3px;
+                  transition: transform 0.3s;
+                "
+              ></div>
+            </div>
+          </label>
+          <label
+            style="
+              display: flex;
+              align-items: center;
+              gap: 0.6rem;
+              cursor: pointer;
+              font-size: 0.85rem;
+              font-weight: 600;
+            "
+          >
+            <span style="color: #888">Site Day Mode</span>
+            <div
+              id="theme-site-toggle"
+              onclick="toggleSiteTheme()"
+              style="
+                width: 44px;
+                height: 24px;
+                border-radius: 100px;
+                background: #333;
+                position: relative;
+                cursor: pointer;
+                transition: background 0.3s;
+                flex-shrink: 0;
+              "
+            >
+              <div
+                id="theme-site-knob"
+                style="
+                  width: 18px;
+                  height: 18px;
+                  border-radius: 50%;
+                  background: #fff;
+                  position: absolute;
+                  top: 3px;
+                  left: 3px;
+                  transition: transform 0.3s;
+                "
+              ></div>
+            </div>
+          </label>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label><i class="fas fa-tag"></i> Hero Tag</label>
+            <input id="a-hero_tag" placeholder="FX TD @ DNEG" />
+          </div>
+          <div class="field">
+            <label><i class="fas fa-briefcase"></i> Role Title</label>
+            <input id="a-role" placeholder="FX TD · DNEG" />
+          </div>
+          <div class="field">
+            <label><i class="fas fa-clock"></i> Experience Hours</label>
+            <input id="a-exp_hours" type="number" placeholder="7000" />
+          </div>
+          <div class="field">
+            <label><i class="fas fa-image"></i> Profile Photo URL</label>
+            <input
+              id="a-profile_url"
+              placeholder="https://example.com/photo.jpg"
+            />
+          </div>
+          <div class="field">
+            <label><i class="fas fa-envelope"></i> Email</label>
+            <input id="a-email" placeholder="utkarshpanwar01@gmail.com" />
+          </div>
+          <div class="field">
+            <label><i class="fas fa-phone"></i> Phone</label>
+            <input id="a-phone" placeholder="+91 8810669600" />
+          </div>
+          <div class="field">
+            <label><i class="fas fa-film"></i> Showreel Vimeo URL</label>
+            <input id="a-showreel" placeholder="https://player.vimeo.com/video/..." />
+          </div>
+          <div class="field">
+            <label><i class="fas fa-map-marker-alt"></i> City Name</label>
+            <input id="a-loc-city" placeholder="e.g. Mumbai" />
+          </div>
+          <div class="field">
+            <label><i class="fas fa-globe"></i> Latitude</label>
+            <input
+              id="a-loc-lat"
+              placeholder="e.g. 19.0760"
+              type="number"
+              step="any"
+            />
+          </div>
+          <div class="field">
+            <label><i class="fas fa-globe"></i> Longitude</label>
+            <input
+              id="a-loc-lon"
+              placeholder="e.g. 72.8777"
+              type="number"
+              step="any"
+            />
+          </div>
+        </div>
         <div class="field">
-          <label>Proficiency: <span id="sk-level-display">85</span>%</label>
-          <input id="sk-level" type="range" min="1" max="100" value="85"
-            oninput="document.getElementById('sk-level-display').textContent=this.value"
-            style="width:100%;accent-color:#e8622a;" />
+          <label><i class="fas fa-align-left"></i> Hero Description</label>
+          <textarea
+            id="a-hero_desc"
+            rows="3"
+            placeholder="Versatile Visual Effects Artist..."
+          ></textarea>
         </div>
-      </div>
-      <button class="btn btn-primary" onclick="addSkill()">
-        <i class="fas fa-plus-circle"></i> Add Skill
-      </button>
-    </div>
-    <p class="msg" id="skills-msg"></p>
-  </section>
 
-  <!-- ABOUT SECTION -->
-  <section class="section">
-    <div class="section-title">
-      <i class="fas fa-user-circle"></i>
-      <span>About</span>
-      <label style="margin-left:auto;display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-size:0.85rem;font-weight:600;">
-        <span style="color:#888;">Available for Work</span>
-        <div id="avail-toggle" onclick="toggleAvailable()" style="
-          width:44px;height:24px;border-radius:100px;background:#333;position:relative;
-          cursor:pointer;transition:background 0.3s;flex-shrink:0;">
-          <div id="avail-knob" style="
-            width:18px;height:18px;border-radius:50%;background:#fff;
-            position:absolute;top:3px;left:3px;
-            transition:transform 0.3s;"></div>
+        <div style="margin-top: 1.5rem">
+          <div class="section-title" style="margin-bottom: 1rem">
+            <i class="fas fa-id-card"></i>
+            <span>About Cards</span>
+          </div>
+          <div id="about-cards-wrap" class="cards-grid"></div>
+          <button class="btn btn-success" onclick="addAboutCard()" style="margin-top:1rem;">
+            <i class="fas fa-plus-circle"></i> Add Card
+          </button>
         </div>
-      </label>
-    </div>
-    <div class="form-grid">
-      <div class="field">
-        <label><i class="fas fa-tag"></i> Hero Tag</label>
-        <input id="a-hero_tag" placeholder="FX TD @ DNEG" />
-      </div>
-      <div class="field">
-        <label><i class="fas fa-briefcase"></i> Role Title</label>
-        <input id="a-role" placeholder="FX TD · DNEG" />
-      </div>
-      <div class="field">
-        <label><i class="fas fa-clock"></i> Experience Hours</label>
-        <input id="a-exp_hours" type="number" placeholder="7000" />
-      </div>
-    </div>
-    <div class="field">
-      <label><i class="fas fa-align-left"></i> Hero Description</label>
-      <textarea id="a-hero_desc" rows="3" placeholder="Versatile Visual Effects Artist..."></textarea>
-    </div>
 
-    <div style="margin-top: 1.5rem;">
-      <div class="section-title" style="margin-bottom: 1rem;">
-        <i class="fas fa-id-card"></i>
-        <span>About Cards</span>
-      </div>
-      <div id="about-cards-wrap" class="cards-grid"></div>
-    </div>
+        <div style="margin-top: 1.5rem">
+          <div class="section-title" style="margin-bottom: 1rem">
+            <i class="fas fa-share-alt"></i>
+            <span>Social &amp; Resume Links</span>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label><i class="fa-brands fa-linkedin"></i> LinkedIn URL</label>
+              <input id="a-linkedin" placeholder="https://www.linkedin.com/in/..." />
+            </div>
+            <div class="field">
+              <label><i class="fa-brands fa-vimeo"></i> Vimeo URL</label>
+              <input id="a-vimeo" placeholder="https://vimeo.com/..." />
+            </div>
+            <div class="field">
+              <label><i class="fa-brands fa-artstation"></i> ArtStation URL</label>
+              <input id="a-artstation" placeholder="https://www.artstation.com/..." />
+            </div>
+            <div class="field">
+              <label><i class="fa-brands fa-instagram"></i> Instagram URL</label>
+              <input id="a-instagram" placeholder="https://www.instagram.com/..." />
+            </div>
+            <div class="field">
+              <label><i class="fa-regular fa-file"></i> Resume Link (Google Drive or PDF URL)</label>
+              <input id="a-resume" placeholder="https://drive.google.com/file/d/..." />
+            </div>
+          </div>
+        </div>
 
-    <div class="field">
-      <button class="btn btn-primary" onclick="saveAbout()">
-        <i class="fas fa-save"></i> Save All Changes
-      </button>
-    </div>
-    <p class="msg" id="about-msg"></p>
-  </section>
-
-  <!-- CREDITS SECTION -->
-  <section class="section">
-    <div class="section-title">
-      <i class="fas fa-trophy"></i>
-      <span>Featured Credits</span>
-      <span style="font-size:0.75rem;color:#888;margin-left:auto;">Drag cards to reorder</span>
-    </div>
-    <div id="credits-wrap" class="cards-grid"></div>
-    <div class="add-section">
-      <div class="form-grid">
         <div class="field">
-          <label><i class="fas fa-plus-circle"></i> New Category</label>
-          <input id="new-cat-name" placeholder="e.g., Web Series, Documentaries" />
+          <button class="btn btn-primary" onclick="saveAbout()">
+            <i class="fas fa-save"></i> Save All Changes
+          </button>
         </div>
-      </div>
-      <button class="btn btn-primary" onclick="addCategory()">
-        <i class="fas fa-folder-plus"></i> Add Category
-      </button>
-    </div>
-    <p class="msg" id="credits-msg"></p>
-  </section>
+        <p class="msg" id="about-msg"></p>
+      </section>
 
-  <!-- WORK SECTION -->
-  <section class="section">
-    <div class="section-title">
-      <i class="fas fa-briefcase"></i>
-      <span>Personal Work Cards</span>
-      <span style="font-size:0.75rem;color:#888;margin-left:auto;">Drag cards to reorder</span>
-    </div>
-    <div id="work-wrap" class="cards-grid"></div>
-
-    <div class="add-section">
-      <div class="section-title" style="margin-bottom: 1rem;">
-        <i class="fas fa-plus"></i>
-        <span>Add New Work Card</span>
-      </div>
-      <div class="form-grid">
-        <div class="field">
-          <label>Title</label>
-          <input id="w-title" placeholder="Project Title" />
+      <!-- TIMELINE SECTION -->
+      <section class="section">
+        <div class="section-title">
+          <i class="fas fa-timeline"></i>
+          <span>Career Timeline</span>
+          <span style="font-size: 0.75rem; color: #888; margin-left: auto"
+            >Drag to reorder</span
+          >
         </div>
-        <div class="field">
-          <label>Vimeo ID</label>
-          <input id="w-vimeo" placeholder="894517786?h=..." />
+        <div
+          id="timeline-admin-wrap"
+          style="
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+          "
+        ></div>
+        <div class="add-section">
+          <div class="form-grid">
+            <div class="field">
+              <label>Role / Position</label
+              ><input id="tl-role" placeholder="FX TD" />
+            </div>
+            <div class="field">
+              <label>Studio / Organisation</label
+              ><input id="tl-org" placeholder="DNEG" />
+            </div>
+            <div class="field">
+              <label>Period</label
+              ><input id="tl-period" placeholder="2022 – Present" />
+            </div>
+            <div class="field">
+              <label>Tags (comma separated)</label
+              ><input id="tl-tags" placeholder="Houdini, FX, Film" />
+            </div>
+          </div>
+          <div class="field" style="margin-bottom: 1rem">
+            <label>Description</label>
+            <textarea
+              id="tl-desc"
+              rows="3"
+              placeholder="What you did here..."
+            ></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="addTimeline()">
+            <i class="fas fa-plus-circle"></i> Add Entry
+          </button>
         </div>
-        <div class="field">
-          <label>Thumbnail Path</label>
-          <input id="w-thumb" placeholder="IMAGE/5.jpg or https://..." />
+        <p class="msg" id="timeline-msg"></p>
+      </section>
+
+      <!-- AWARDS SECTION -->
+      <section class="section">
+        <div class="section-title">
+          <i class="fas fa-trophy"></i>
+          <span>Awards &amp; Recognition</span>
         </div>
-        <div class="field">
-          <label>Tags (comma separated)</label>
-          <input id="w-tags" placeholder="FX, Houdini, Pyro" />
+        <div
+          id="awards-wrap"
+          style="
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+          "
+        ></div>
+        <div class="add-section">
+          <div class="form-grid">
+            <div class="field">
+              <label>Award Title</label
+              ><input id="aw-title" placeholder="Best FX Simulation" />
+            </div>
+            <div class="field">
+              <label>Organisation</label
+              ><input id="aw-org" placeholder="Delhi CG Animation Awards" />
+            </div>
+            <div class="field">
+              <label>Year</label><input id="aw-year" placeholder="2023" />
+            </div>
+          </div>
+          <div class="field" style="margin-bottom: 1rem">
+            <label>Description (optional)</label>
+            <textarea
+              id="aw-desc"
+              rows="2"
+              placeholder="Brief description..."
+            ></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="addAward()">
+            <i class="fas fa-plus-circle"></i> Add Award
+          </button>
         </div>
-        <div class="field">
-          <label>External Link</label>
-          <input id="w-link" placeholder="https://artstation.com/..." />
+        <p class="msg" id="awards-msg"></p>
+      </section>
+
+      <!-- BLOG SECTION -->
+      <section class="section">
+        <div class="section-title">
+          <i class="fas fa-pen-nib"></i>
+          <span>Blog &amp; Breakdowns</span>
         </div>
-      </div>
-      <div class="field">
-        <label>Description</label>
-        <textarea id="w-desc" rows="3" placeholder="Project description..."></textarea>
-      </div>
-      <button class="btn btn-success" onclick="addWork()">
-        <i class="fas fa-plus-circle"></i> Add Work Card
-      </button>
-    </div>
-    <p class="msg" id="work-msg"></p>
-  </section>
-</main>
+        <div
+          id="blogs-wrap"
+          class="cards-grid"
+          style="margin-bottom: 1.5rem"
+        ></div>
+        <div class="add-section">
+          <div class="section-title" style="margin-bottom: 1rem">
+            <i class="fas fa-plus"></i><span>New Post</span>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label>Title</label
+              ><input id="bl-title" placeholder="How I built the fire sim" />
+            </div>
+            <div class="field">
+              <label>Thumbnail URL</label
+              ><input id="bl-thumb" placeholder="https://..." />
+            </div>
+            <div class="field">
+              <label>Tags (comma separated)</label
+              ><input id="bl-tags" placeholder="Houdini, Pyro, FX" />
+            </div>
+          </div>
+          <div class="field" style="margin-bottom: 1rem">
+            <label>Excerpt (shown on card)</label>
+            <textarea
+              id="bl-excerpt"
+              rows="2"
+              placeholder="Short summary..."
+            ></textarea>
+          </div>
+          <div class="field" style="margin-bottom: 1rem">
+            <label>Full Body</label>
+            <textarea
+              id="bl-body"
+              rows="6"
+              placeholder="Full breakdown text..."
+            ></textarea>
+          </div>
+          <button class="btn btn-success" onclick="addBlog()">
+            <i class="fas fa-plus-circle"></i> Publish Post
+          </button>
+        </div>
+        <p class="msg" id="blogs-msg"></p>
+      </section>
 
-<script>
-const API = '';
+      <!-- CREDITS SECTION -->
+      <section class="section">
+        <div class="section-title">
+          <i class="fas fa-trophy"></i>
+          <span>Featured Credits</span>
+          <span style="font-size: 0.75rem; color: #888; margin-left: auto"
+            >Drag cards to reorder</span
+          >
+        </div>
+        <div id="credits-wrap" class="cards-grid"></div>
+        <div class="add-section">
+          <div class="form-grid">
+            <div class="field">
+              <label><i class="fas fa-plus-circle"></i> New Category</label>
+              <input
+                id="new-cat-name"
+                placeholder="e.g., Web Series, Documentaries"
+              />
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="addCategory()">
+            <i class="fas fa-folder-plus"></i> Add Category
+          </button>
+        </div>
+        <p class="msg" id="credits-msg"></p>
+      </section>
 
-function showMsg(id, text, isErr = false) {
-  const el = document.getElementById(id);
-  el.textContent = text;
-  el.className = `msg ${isErr ? 'error' : 'success'}`;
-  setTimeout(() => {
-    el.className = 'msg';
-    el.textContent = '';
-  }, 4000);
-}
+      <!-- WORK SECTION -->
+      <section class="section">
+        <div class="section-title">
+          <i class="fas fa-briefcase"></i>
+          <span>Personal Work Cards</span>
+          <span style="font-size: 0.75rem; color: #888; margin-left: auto"
+            >Drag cards to reorder</span
+          >
+        </div>
+        <div id="work-wrap" class="cards-grid"></div>
 
-async function api(path, method = 'GET', body = null) {
-  const opts = { method, headers: { 'Content-Type': 'application/json' }, credentials: 'include' };
-  if (body) opts.body = JSON.stringify(body);
-  const r = await fetch(API + path, opts);
-  return r.json();
-}
+        <div class="add-section">
+          <div class="section-title" style="margin-bottom: 1rem">
+            <i class="fas fa-plus"></i>
+            <span>Add New Work Card</span>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label>Title</label>
+              <input id="w-title" placeholder="Project Title" />
+            </div>
+            <div class="field">
+              <label>Vimeo ID</label>
+              <input id="w-vimeo" placeholder="894517786?h=..." />
+            </div>
+            <div class="field">
+              <label>Thumbnail Path</label>
+              <input id="w-thumb" placeholder="IMAGE/PROJECTS/5.jpg or https://..." />
+            </div>
+            <div class="field">
+              <label>Tags (comma separated)</label>
+              <input id="w-tags" placeholder="FX, Houdini, Pyro" />
+            </div>
+            <div class="field">
+              <label>External Link</label>
+              <input id="w-link" placeholder="https://artstation.com/..." />
+            </div>
+          </div>
+          <div class="field">
+            <label>Description</label>
+            <textarea
+              id="w-desc"
+              rows="3"
+              placeholder="Project description..."
+            ></textarea>
+          </div>
+          <button class="btn btn-success" onclick="addWork()">
+            <i class="fas fa-plus-circle"></i> Add Work Card
+          </button>
+        </div>
+        <p class="msg" id="work-msg"></p>
+      </section>
+      <!-- STILLS SECTION -->
+      <section class="section">
+        <div class="section-title">
+          <i class="fas fa-images"></i>
+          <span>Stills Gallery</span>
+          <span style="font-size: 0.75rem; color: #888; margin-left: auto">Drag to reorder</span>
+        </div>
+        <div id="stills-wrap" class="cards-grid" style="margin-bottom: 1.5rem"></div>
+        <div class="add-section">
+          <div class="form-grid">
+            <div class="field">
+              <label>Image URL</label>
+              <input id="st-url" placeholder="https://... or /static/IMAGE/STILLS/IMG (1).jpg" />
+            </div>
+            <div class="field">
+              <label>Caption (optional)</label>
+              <input id="st-caption" placeholder="Behind the scenes" />
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="addStill()">
+            <i class="fas fa-plus-circle"></i> Add Still
+          </button>
+        </div>
+        <p class="msg" id="stills-msg"></p>
+      </section>
+    </main>
 
-// ABOUT
-let aboutCards = [];
+    <script>
+      const API = "";
 
-async function loadAbout() {
-  const d = await api('/api/about');
-  document.getElementById('a-hero_tag').value = d.hero_tag || '';
-  document.getElementById('a-hero_desc').value = d.hero_desc || '';
-  document.getElementById('a-role').value = d.role || '';
-  document.getElementById('a-exp_hours').value = d.exp_hours || '';
-  aboutCards = d.cards || [];
-  renderAboutCards();
-}
+      function showMsg(id, text, isErr = false) {
+        const el = document.getElementById(id);
+        el.textContent = text;
+        el.className = `msg ${isErr ? "error" : "success"}`;
+        setTimeout(() => {
+          el.className = "msg";
+          el.textContent = "";
+        }, 4000);
+      }
 
-function renderAboutCards() {
-  const wrap = document.getElementById('about-cards-wrap');
-  wrap.innerHTML = '';
-  aboutCards.forEach((c, i) => {
-    const div = document.createElement('div');
-    div.className = 'admin-card';
-    div.innerHTML = `
+      async function api(path, method = "GET", body = null) {
+        const opts = {
+          method,
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        };
+        if (body) opts.body = JSON.stringify(body);
+        const r = await fetch(API + path, opts);
+        return r.json();
+      }
+
+      // ABOUT
+      let aboutCards = [];
+
+      async function loadAbout() {
+        const d = await api("/api/about");
+        document.getElementById("a-hero_tag").value = d.hero_tag || "";
+        document.getElementById("a-hero_desc").value = d.hero_desc || "";
+        document.getElementById("a-role").value = d.role || "";
+        document.getElementById("a-exp_hours").value = d.exp_hours || "";
+        document.getElementById("a-profile_url").value = d.profile_url || "";
+        document.getElementById("a-email").value = d.email || "";
+        document.getElementById("a-phone").value = d.phone || "";
+        document.getElementById("a-showreel").value = d.showreel || "";
+        const loc = d.location || {};
+        document.getElementById("a-loc-city").value = loc.city || "";
+        document.getElementById("a-loc-lat").value = loc.lat || "";
+        document.getElementById("a-loc-lon").value = loc.lon || "";
+        const s = d.social_links || {};
+        document.getElementById("a-linkedin").value = s.linkedin || "";
+        document.getElementById("a-vimeo").value = s.vimeo || "";
+        document.getElementById("a-artstation").value = s.artstation || "";
+        document.getElementById("a-instagram").value = s.instagram || "";
+        document.getElementById("a-resume").value = s.resume || "";
+        aboutCards = d.cards || [];
+        renderAboutCards();
+      }
+
+      function renderAboutCards() {
+        const wrap = document.getElementById("about-cards-wrap");
+        wrap.innerHTML = "";
+        aboutCards.forEach((c, i) => {
+          const div = document.createElement("div");
+          div.className = "admin-card";
+          div.innerHTML = `
       <div class="card-header">
         <span class="card-title"><i class="fas fa-id-card"></i> Card ${i + 1}</span>
         <button class="btn btn-danger" onclick="removeAboutCard(${i})">
@@ -653,51 +1242,441 @@ function renderAboutCards() {
         <textarea rows="3" oninput="aboutCards[${i}].text=this.value">${c.text}</textarea>
       </div>
     `;
-    wrap.appendChild(div);
-  });
-}
+          wrap.appendChild(div);
+        });
+      }
 
-function removeAboutCard(i) { aboutCards.splice(i, 1); renderAboutCards(); }
+      function removeAboutCard(i) {
+        aboutCards.splice(i, 1);
+        renderAboutCards();
+      }
 
-async function saveAbout() {
-  const payload = {
-    hero_tag: document.getElementById('a-hero_tag').value,
-    hero_desc: document.getElementById('a-hero_desc').value,
-    role: document.getElementById('a-role').value,
-    exp_hours: parseInt(document.getElementById('a-exp_hours').value) || 0,
-    cards: aboutCards
-  };
-  const r = await api('/api/admin/about', 'POST', payload);
-  showMsg('about-msg', r.error ? '❌ ' + r.error : '✅ All changes saved successfully!', !!r.error);
-}
+      function addAboutCard() {
+        aboutCards.push({ icon: 'fa-solid fa-star', title: '', text: '' });
+        renderAboutCards();
+        document.getElementById('about-cards-wrap').lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
 
-// CREDITS
-async function loadCredits() {
-  const cats = await api('/api/credits');
-  const wrap = document.getElementById('credits-wrap');
-  wrap.innerHTML = '';
-  cats.forEach(cat => wrap.appendChild(buildCatCard(cat)));
-  enableDrag('credits-wrap', '/api/admin/credits/reorder');
-}
+      async function saveAbout() {
+        const payload = {
+          hero_tag: document.getElementById("a-hero_tag").value,
+          hero_desc: document.getElementById("a-hero_desc").value,
+          role: document.getElementById("a-role").value,
+          exp_hours:
+            parseInt(document.getElementById("a-exp_hours").value) || 0,
+          profile_url: document.getElementById("a-profile_url").value.trim(),
+          location: {
+            city: document.getElementById("a-loc-city").value.trim(),
+            lat: parseFloat(document.getElementById("a-loc-lat").value) || null,
+            lon: parseFloat(document.getElementById("a-loc-lon").value) || null,
+          },
+          email:    document.getElementById("a-email").value.trim(),
+          phone:    document.getElementById("a-phone").value.trim(),
+          showreel: document.getElementById("a-showreel").value.trim(),
+          social_links: {
+            linkedin:   document.getElementById("a-linkedin").value.trim(),
+            vimeo:      document.getElementById("a-vimeo").value.trim(),
+            artstation: document.getElementById("a-artstation").value.trim(),
+            instagram:  document.getElementById("a-instagram").value.trim(),
+            resume:     document.getElementById("a-resume").value.trim(),
+          },
+          cards: aboutCards,
+        };
+        const r = await api("/api/admin/about", "POST", payload);
+        showMsg(
+          "about-msg",
+          r.error ? "❌ " + r.error : "✅ All changes saved successfully!",
+          !!r.error,
+        );
+      }
 
-function buildCatCard(cat) {
-  const div = document.createElement('div');
-  div.className = 'admin-card';
-  div.id = 'cat-' + cat._id;
-  div.setAttribute('draggable', 'true');
-  div.dataset.id = cat._id;
+      // TIMELINE
+      async function loadTimeline() {
+        const items = await api("/api/timeline");
+        const wrap = document.getElementById("timeline-admin-wrap");
+        if (!items.length) {
+          wrap.innerHTML =
+            '<p style="color:#666;font-size:0.85rem;">No entries yet.</p>';
+          return;
+        }
+        wrap.innerHTML = "";
+        items.forEach((t) => {
+          const div = document.createElement("div");
+          div.className = "admin-card";
+          div.id = "tl-" + t._id;
+          div.setAttribute("draggable", "true");
+          div.dataset.id = t._id;
+          div.innerHTML = `
+      <div class="card-header">
+        <span class="card-title"><i class="fas fa-grip-vertical" style="color:#555;margin-right:0.5rem;cursor:grab;"></i>${escapeHtml(t.role)} — ${escapeHtml(t.org)}</span>
+        <div style="display:flex;gap:0.5rem;">
+          <span style="font-size:0.75rem;color:#888;">${escapeHtml(t.period || "")}</span>
+          <button class="btn btn-danger" onclick="deleteTimeline('${t._id}')" style="margin-top:0;"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+      <div class="form-grid" style="margin-top:0.75rem;">
+        <div class="field"><label>Role</label><input id="tlr-${t._id}" value="${escapeHtml(t.role)}" /></div>
+        <div class="field"><label>Organisation</label><input id="tlo-${t._id}" value="${escapeHtml(t.org)}" /></div>
+        <div class="field"><label>Period</label><input id="tlp-${t._id}" value="${escapeHtml(t.period || "")}" /></div>
+        <div class="field"><label>Tags</label><input id="tltg-${t._id}" value="${(t.tags || []).join(", ")}" /></div>
+      </div>
+      <div class="field" style="margin-top:0.75rem;"><label>Description</label><textarea id="tld-${t._id}" rows="2">${escapeHtml(t.desc || "")}</textarea></div>
+      <button class="btn btn-primary" onclick="updateTimeline('${t._id}')" style="margin-top:0.75rem;">
+        <i class="fas fa-save"></i> Save
+      </button>`;
+          wrap.appendChild(div);
+        });
+        enableDrag("timeline-admin-wrap", "/api/admin/timeline/reorder");
+      }
 
-  let videosHtml = (cat.videos || []).map((v, i) => `
-    <div class="video-row">
+      async function addTimeline() {
+        const role = document.getElementById("tl-role").value.trim();
+        const org = document.getElementById("tl-org").value.trim();
+        if (!role || !org)
+          return showMsg(
+            "timeline-msg",
+            "Role and organisation required",
+            true,
+          );
+        const r = await api("/api/admin/timeline", "POST", {
+          role,
+          org,
+          period: document.getElementById("tl-period").value.trim(),
+          desc: document.getElementById("tl-desc").value.trim(),
+          tags: document
+            .getElementById("tl-tags")
+            .value.split(",")
+            .map((t) => t.trim())
+            .filter(Boolean),
+        });
+        if (r.error) return showMsg("timeline-msg", r.error, true);
+        ["tl-role", "tl-org", "tl-period", "tl-desc", "tl-tags"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        showMsg("timeline-msg", "✅ Entry added");
+        loadTimeline();
+      }
+
+      async function updateTimeline(id) {
+        const r = await api(`/api/admin/timeline/${id}`, "PUT", {
+          role: document.getElementById("tlr-" + id).value,
+          org: document.getElementById("tlo-" + id).value,
+          period: document.getElementById("tlp-" + id).value,
+          desc: document.getElementById("tld-" + id).value,
+          tags: document
+            .getElementById("tltg-" + id)
+            .value.split(",")
+            .map((t) => t.trim())
+            .filter(Boolean),
+        });
+        showMsg(
+          "timeline-msg",
+          r.error ? "❌ " + r.error : "✅ Entry updated",
+          !!r.error,
+        );
+      }
+
+      async function deleteTimeline(id) {
+        if (!confirm("Delete this entry?")) return;
+        await api(`/api/admin/timeline/${id}`, "DELETE");
+        document.getElementById("tl-" + id)?.remove();
+        showMsg("timeline-msg", "✅ Entry deleted");
+      }
+
+      // AWARDS
+      async function loadAwards() {
+        const items = await api("/api/awards");
+        const wrap = document.getElementById("awards-wrap");
+        if (!items.length) {
+          wrap.innerHTML =
+            '<p style="color:#666;font-size:0.85rem;">No awards yet.</p>';
+          return;
+        }
+        wrap.innerHTML = '';
+        items.forEach((a) => {
+          const div = document.createElement('div');
+          div.className = 'admin-card';
+          div.id = 'award-' + a._id;
+          div.innerHTML = `
+            <div class="card-header">
+              <span class="card-title"><i class="fas fa-trophy"></i> ${escapeHtml(a.title)}</span>
+              <div style="display:flex;gap:0.5rem;">
+                <button class="btn btn-warning" onclick="toggleAwardEdit('${a._id}')" style="margin-top:0;padding:0.35rem 0.7rem;"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-danger" onclick="deleteAward('${a._id}')" style="margin-top:0;padding:0.35rem 0.6rem;"><i class="fas fa-times"></i></button>
+              </div>
+            </div>
+            <div style="font-size:0.8rem;color:#888;">${escapeHtml(a.org || '')} ${a.year ? '· ' + a.year : ''}</div>
+            ${a.desc ? `<div style="font-size:0.82rem;color:#aaa;margin-top:0.4rem;">${escapeHtml(a.desc)}</div>` : ''}
+            <div id="award-edit-${a._id}" style="display:none;margin-top:1rem;">
+              <div class="form-grid">
+                <div class="field"><label>Title</label><input id="awt-${a._id}" value="${escapeHtml(a.title)}" /></div>
+                <div class="field"><label>Organisation</label><input id="awo-${a._id}" value="${escapeHtml(a.org || '')}" /></div>
+                <div class="field"><label>Year</label><input id="awy-${a._id}" value="${escapeHtml(a.year || '')}" /></div>
+              </div>
+              <div class="field" style="margin-bottom:0.75rem;"><label>Description</label><textarea id="awd-${a._id}" rows="2">${escapeHtml(a.desc || '')}</textarea></div>
+              <button class="btn btn-primary" onclick="updateAward('${a._id}')" style="margin-top:0;"><i class="fas fa-save"></i> Save</button>
+            </div>`;
+          wrap.appendChild(div);
+        });
+      }
+
+      function toggleAwardEdit(id) {
+        const el = document.getElementById('award-edit-' + id);
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+      }
+
+      async function updateAward(id) {
+        const r = await api(`/api/admin/awards/${id}`, 'PUT', {
+          title: document.getElementById('awt-' + id).value,
+          org:   document.getElementById('awo-' + id).value,
+          year:  document.getElementById('awy-' + id).value,
+          desc:  document.getElementById('awd-' + id).value,
+        });
+        showMsg('awards-msg', r.error ? '\u274c ' + r.error : '\u2705 Award updated', !!r.error);
+        if (!r.error) loadAwards();
+      }
+
+      async function addAward() {
+        const title = document.getElementById("aw-title").value.trim();
+        if (!title) return showMsg("awards-msg", "Title required", true);
+        const r = await api("/api/admin/awards", "POST", {
+          title,
+          org: document.getElementById("aw-org").value.trim(),
+          year: document.getElementById("aw-year").value.trim(),
+          desc: document.getElementById("aw-desc").value.trim(),
+        });
+        if (r.error) return showMsg("awards-msg", r.error, true);
+        ["aw-title", "aw-org", "aw-year", "aw-desc"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        showMsg("awards-msg", "✅ Award added");
+        loadAwards();
+      }
+
+      async function deleteAward(id) {
+        await api(`/api/admin/awards/${id}`, "DELETE");
+        showMsg("awards-msg", "✅ Award removed");
+        loadAwards();
+      }
+
+      // BLOGS
+      async function loadBlogs() {
+        const items = await api("/api/blogs");
+        const wrap = document.getElementById("blogs-wrap");
+        if (!items.length) {
+          wrap.innerHTML =
+            '<p style="color:#666;font-size:0.85rem;">No posts yet.</p>';
+          return;
+        }
+        wrap.innerHTML = "";
+        items.forEach((b) => {
+          const div = document.createElement("div");
+          div.className = "admin-card";
+          div.id = "blog-" + b._id;
+          div.innerHTML = `
+      <div class="card-header">
+        <span class="card-title"><i class="fas fa-pen-nib"></i> ${escapeHtml(b.title)}</span>
+        <div style="display:flex;gap:0.5rem;align-items:center;">
+          <span style="font-size:0.75rem;color:#888;">${b.date}</span>
+          <button class="btn btn-danger" onclick="deleteBlog('${b._id}')" style="margin-top:0;"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+      <div class="form-grid" style="margin-top:0.75rem;">
+        <div class="field"><label>Title</label><input id="blt-${b._id}" value="${escapeHtml(b.title)}" /></div>
+        <div class="field"><label>Thumbnail URL</label><input id="blth-${b._id}" value="${escapeHtml(b.thumb || "")}" /></div>
+        <div class="field"><label>Tags</label><input id="bltg-${b._id}" value="${(b.tags || []).join(", ")}" /></div>
+      </div>
+      <div class="field" style="margin-top:0.75rem;"><label>Excerpt</label><textarea id="ble-${b._id}" rows="2">${escapeHtml(b.excerpt || "")}</textarea></div>
+      <div class="field" style="margin-top:0.75rem;"><label>Body</label><textarea id="blb-${b._id}" rows="5">${escapeHtml(b.body || "")}</textarea></div>
+      <button class="btn btn-primary" onclick="updateBlog('${b._id}')" style="margin-top:0.75rem;">
+        <i class="fas fa-save"></i> Save
+      </button>`;
+          wrap.appendChild(div);
+        });
+      }
+
+      async function updateBlog(id) {
+        const r = await api(`/api/admin/blogs/${id}`, "PUT", {
+          title: document.getElementById("blt-" + id).value,
+          thumb: document.getElementById("blth-" + id).value,
+          tags: document
+            .getElementById("bltg-" + id)
+            .value.split(",")
+            .map((t) => t.trim())
+            .filter(Boolean),
+          excerpt: document.getElementById("ble-" + id).value,
+          body: document.getElementById("blb-" + id).value,
+        });
+        showMsg(
+          "blogs-msg",
+          r.error ? "❌ " + r.error : "✅ Post updated",
+          !!r.error,
+        );
+      }
+
+      async function addBlog() {
+        const title = document.getElementById("bl-title").value.trim();
+        const body = document.getElementById("bl-body").value.trim();
+        if (!title || !body)
+          return showMsg("blogs-msg", "Title and body required", true);
+        const r = await api("/api/admin/blogs", "POST", {
+          title,
+          body,
+          thumb: document.getElementById("bl-thumb").value.trim(),
+          excerpt: document.getElementById("bl-excerpt").value.trim(),
+          tags: document
+            .getElementById("bl-tags")
+            .value.split(",")
+            .map((t) => t.trim())
+            .filter(Boolean),
+        });
+        if (r.error) return showMsg("blogs-msg", r.error, true);
+        ["bl-title", "bl-thumb", "bl-tags", "bl-excerpt", "bl-body"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        showMsg("blogs-msg", "✅ Post published");
+        loadBlogs();
+      }
+
+      async function deleteBlog(id) {
+        if (!confirm("Delete this post?")) return;
+        await api(`/api/admin/blogs/${id}`, "DELETE");
+        document.getElementById("blog-" + id)?.remove();
+        showMsg("blogs-msg", "✅ Post deleted");
+      }
+
+      // COMPANIES FUNCTIONS
+      async function loadCompanies() {
+        const companies = await api("/api/admin/companies");
+        const wrap = document.getElementById("companies-wrap");
+        if (!companies.length) {
+          wrap.innerHTML =
+            '<p style="color:#666;font-size:0.85rem;">No companies added yet.</p>';
+          return;
+        }
+        wrap.innerHTML = "";
+        companies.forEach((comp) => {
+          const div = document.createElement("div");
+          div.className = "admin-card";
+          div.id = "comp-" + comp._id;
+          div.setAttribute("draggable", "true");
+          div.dataset.id = comp._id;
+          div.innerHTML = `
+      <div class="card-header">
+        <span class="card-title">
+          <i class="fas fa-grip-vertical" style="color:#555;margin-right:0.5rem;cursor:grab;"></i>
+          <img src="${escapeHtml(comp.img_url)}" style="height:30px;width:auto;max-width:60px;object-fit:contain;margin-right:0.5rem;" 
+               onerror="this.style.display='none'">
+          ${escapeHtml(comp.name)}
+        </span>
+        <div style="display:flex;gap:0.5rem;">
+          <button class="btn btn-danger" onclick="deleteCompany('${comp._id}')">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </div>
+      </div>
+      <div class="form-grid" style="margin-top:0.75rem;">
+        <div class="field"><label>Company Name</label><input id="compn-${comp._id}" value="${escapeHtml(comp.name)}" /></div>
+        <div class="field"><label>Logo URL</label><input id="compu-${comp._id}" value="${escapeHtml(comp.img_url)}" /></div>
+      </div>
+      <button class="btn btn-primary" onclick="updateCompany('${comp._id}')" style="margin-top:0.75rem;">
+        <i class="fas fa-save"></i> Save Changes
+      </button>
+    `;
+          wrap.appendChild(div);
+        });
+        enableDrag("companies-wrap", "/api/admin/companies/reorder");
+      }
+
+      async function addCompany() {
+        const name = document.getElementById("comp-name").value.trim();
+        const img_url = document.getElementById("comp-url").value.trim();
+
+        if (!name || !img_url) {
+          return showMsg(
+            "companies-msg",
+            "Both company name and logo URL are required",
+            true,
+          );
+        }
+
+        const r = await api("/api/admin/companies", "POST", { name, img_url });
+        if (r.error) {
+          showMsg("companies-msg", r.error, true);
+          return;
+        }
+
+        document.getElementById("comp-name").value = "";
+        document.getElementById("comp-url").value = "";
+        showMsg("companies-msg", "✅ Company added successfully!");
+        loadCompanies();
+      }
+
+      async function updateCompany(id) {
+        const name = document.getElementById("compn-" + id).value.trim();
+        const img_url = document.getElementById("compu-" + id).value.trim();
+
+        if (!name || !img_url) {
+          return showMsg("companies-msg", "Both fields are required", true);
+        }
+
+        const r = await api(`/api/admin/companies/${id}`, "PUT", {
+          name,
+          img_url,
+        });
+        showMsg(
+          "companies-msg",
+          r.error ? "❌ " + r.error : "✅ Company updated",
+          !!r.error,
+        );
+        if (!r.error) loadCompanies();
+      }
+
+      async function deleteCompany(id) {
+        if (
+          !confirm(
+            "Delete this company? This will remove it from the footer display.",
+          )
+        )
+          return;
+        const r = await api(`/api/admin/companies/${id}`, "DELETE");
+        document.getElementById("comp-" + id)?.remove();
+        showMsg("companies-msg", "✅ Company deleted");
+        loadCompanies();
+      }
+
+      // CREDITS
+      async function loadCredits() {
+        const cats = await api("/api/credits");
+        const wrap = document.getElementById("credits-wrap");
+        wrap.innerHTML = "";
+        cats.forEach((cat) => wrap.appendChild(buildCatCard(cat)));
+        enableDrag("credits-wrap", "/api/admin/credits/reorder");
+      }
+
+      function buildCatCard(cat) {
+        const div = document.createElement("div");
+        div.className = "admin-card";
+        div.id = "cat-" + cat._id;
+        div.setAttribute("draggable", "true");
+        div.dataset.id = cat._id;
+
+        let videosHtml = (cat.videos || [])
+          .map(
+            (v, i) => `
+    <div class="video-row" draggable="true" data-vidx="${i}" style="cursor:grab;">
+      <i class="fas fa-grip-vertical" style="color:#555;flex-shrink:0;cursor:grab;"></i>
       <input value="${escapeHtml(v.embed)}" placeholder="Embed URL" id="ve-${cat._id}-${i}" />
       <input value="${escapeHtml(v.caption)}" placeholder="Caption" id="vc-${cat._id}-${i}" />
-      <button class="btn btn-danger" onclick="deleteVideo('${cat._id}',${i})" style="padding: 0.5rem;">
+      <button class="btn btn-danger" onclick="deleteVideo('${cat._id}',${i})" style="padding: 0.5rem;margin-top:0;">
         <i class="fas fa-times"></i>
       </button>
     </div>
-  `).join('');
+  `,
+          )
+          .join("");
 
-  div.innerHTML = `
+        div.innerHTML = `
     <div class="card-header">
       <input value="${escapeHtml(cat.category)}" id="cname-${cat._id}" class="card-title" style="background: transparent; border: none; font-weight: 700;" />
       <div style="display: flex; gap: 0.5rem; align-items:center;">
@@ -714,84 +1693,147 @@ function buildCatCard(cat) {
     <div class="video-row" style="margin-top: 1rem;">
       <input id="ne-${cat._id}" placeholder="New embed URL" />
       <input id="nc-${cat._id}" placeholder="Caption" />
-      <button class="btn btn-success" onclick="addVideo('${cat._id}')" style="white-space: nowrap;">
+      <button class="btn btn-success" onclick="addVideo('${cat._id}')" style="white-space: nowrap;margin-top:0;">
         <i class="fas fa-plus"></i> Add Video
       </button>
     </div>
   `;
-  return div;
-}
+        // attach drag-to-reorder on the videos container after innerHTML is set
+        setTimeout(() => enableVideoDrag(cat._id), 0);
+        return div;
+      }
 
-function escapeHtml(str) {
-  if (!str) return '';
-  return str.replace(/[&<>]/g, function(m) {
-    if (m === '&') return '&amp;';
-    if (m === '<') return '&lt;';
-    if (m === '>') return '&gt;';
-    return m;
-  }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-    return c;
-  });
-}
+      function enableVideoDrag(catId) {
+        const container = document.getElementById('videos-' + catId);
+        if (!container) return;
+        let dragged = null;
+        container.addEventListener('dragstart', (e) => {
+          dragged = e.target.closest('[data-vidx]');
+          setTimeout(() => dragged && (dragged.style.opacity = '0.4'), 0);
+          e.stopPropagation(); // prevent category card drag from firing
+        });
+        container.addEventListener('dragend', (e) => {
+          if (dragged) dragged.style.opacity = '1';
+          dragged = null;
+          saveVideoOrder(catId);
+        });
+        container.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const target = e.target.closest('[data-vidx]');
+          if (target && target !== dragged) {
+            const rect = target.getBoundingClientRect();
+            const after = e.clientY > rect.top + rect.height / 2;
+            container.insertBefore(dragged, after ? target.nextSibling : target);
+          }
+        });
+      }
 
-async function renameCategory(id) {
-  const name = document.getElementById('cname-' + id).value.trim();
-  if (!name) return showMsg('credits-msg', 'Category name required', true);
-  const r = await api(`/api/admin/credits/${id}`, 'PUT', { category: name });
-  showMsg('credits-msg', r.error ? '❌ ' + r.error : '✅ Category renamed', !!r.error);
-}
+      async function saveVideoOrder(catId) {
+        const container = document.getElementById('videos-' + catId);
+        if (!container) return;
+        const order = [...container.querySelectorAll('[data-vidx]')].map((el) =>
+          parseInt(el.dataset.vidx)
+        );
+        await api(`/api/admin/credits/${catId}/videos/reorder`, 'POST', { order });
+        showMsg('credits-msg', '✅ Video order saved');
+        loadCredits();
+      }
 
-async function deleteCategory(id) {
-  if (!confirm('Delete this entire category? All videos will be lost.')) return;
-  await api(`/api/admin/credits/${id}`, 'DELETE');
-  document.getElementById('cat-' + id)?.remove();
-  showMsg('credits-msg', '✅ Category deleted');
-}
+      function escapeHtml(str) {
+        if (!str) return "";
+        return str
+          .replace(/[&<>]/g, function (m) {
+            if (m === "&") return "&amp;";
+            if (m === "<") return "&lt;";
+            if (m === ">") return "&gt;";
+            return m;
+          })
+          .replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function (c) {
+            return c;
+          });
+      }
 
-async function addVideo(catId) {
-  const embed = document.getElementById('ne-' + catId).value.trim();
-  const caption = document.getElementById('nc-' + catId).value.trim();
-  if (!embed || !caption) {
-    return showMsg('credits-msg', 'Both embed URL and caption are required', true);
-  }
-  const r = await api(`/api/admin/credits/${catId}/videos`, 'POST', { embed, caption });
-  if (r.error) { showMsg('credits-msg', r.error, true); return; }
-  showMsg('credits-msg', '✅ Video added');
-  loadCredits();
-}
+      async function renameCategory(id) {
+        const name = document.getElementById("cname-" + id).value.trim();
+        if (!name)
+          return showMsg("credits-msg", "Category name required", true);
+        const r = await api(`/api/admin/credits/${id}`, "PUT", {
+          category: name,
+        });
+        showMsg(
+          "credits-msg",
+          r.error ? "❌ " + r.error : "✅ Category renamed",
+          !!r.error,
+        );
+      }
 
-async function deleteVideo(catId, idx) {
-  await api(`/api/admin/credits/${catId}/videos/${idx}`, 'DELETE');
-  showMsg('credits-msg', '✅ Video removed');
-  loadCredits();
-}
+      async function deleteCategory(id) {
+        if (!confirm("Delete this entire category? All videos will be lost."))
+          return;
+        await api(`/api/admin/credits/${id}`, "DELETE");
+        document.getElementById("cat-" + id)?.remove();
+        showMsg("credits-msg", "✅ Category deleted");
+      }
 
-async function addCategory() {
-  const name = document.getElementById('new-cat-name').value.trim();
-  if (!name) return showMsg('credits-msg', 'Category name required', true);
-  const r = await api('/api/admin/credits', 'POST', { category: name });
-  if (r.error) { showMsg('credits-msg', r.error, true); return; }
-  document.getElementById('new-cat-name').value = '';
-  showMsg('credits-msg', '✅ Category created');
-  loadCredits();
-}
+      async function addVideo(catId) {
+        const embed = document.getElementById("ne-" + catId).value.trim();
+        const caption = document.getElementById("nc-" + catId).value.trim();
+        if (!embed || !caption) {
+          return showMsg(
+            "credits-msg",
+            "Both embed URL and caption are required",
+            true,
+          );
+        }
+        const r = await api(`/api/admin/credits/${catId}/videos`, "POST", {
+          embed,
+          caption,
+        });
+        if (r.error) {
+          showMsg("credits-msg", r.error, true);
+          return;
+        }
+        showMsg("credits-msg", "✅ Video added");
+        loadCredits();
+      }
 
-// WORK
-async function loadWork() {
-  const items = await api('/api/work');
-  const wrap = document.getElementById('work-wrap');
-  wrap.innerHTML = '';
-  items.forEach(w => wrap.appendChild(buildWorkCard(w)));
-  enableDrag('work-wrap', '/api/admin/work/reorder');
-}
+      async function deleteVideo(catId, idx) {
+        await api(`/api/admin/credits/${catId}/videos/${idx}`, "DELETE");
+        showMsg("credits-msg", "✅ Video removed");
+        loadCredits();
+      }
 
-function buildWorkCard(w) {
-  const div = document.createElement('div');
-  div.className = 'admin-card';
-  div.id = 'work-' + w._id;
-  div.setAttribute('draggable', 'true');
-  div.dataset.id = w._id;
-  div.innerHTML = `
+      async function addCategory() {
+        const name = document.getElementById("new-cat-name").value.trim();
+        if (!name)
+          return showMsg("credits-msg", "Category name required", true);
+        const r = await api("/api/admin/credits", "POST", { category: name });
+        if (r.error) {
+          showMsg("credits-msg", r.error, true);
+          return;
+        }
+        document.getElementById("new-cat-name").value = "";
+        showMsg("credits-msg", "✅ Category created");
+        loadCredits();
+      }
+
+      // WORK
+      async function loadWork() {
+        const items = await api("/api/work");
+        const wrap = document.getElementById("work-wrap");
+        wrap.innerHTML = "";
+        items.forEach((w) => wrap.appendChild(buildWorkCard(w)));
+        enableDrag("work-wrap", "/api/admin/work/reorder");
+      }
+
+      function buildWorkCard(w) {
+        const div = document.createElement("div");
+        div.className = "admin-card";
+        div.id = "work-" + w._id;
+        div.setAttribute("draggable", "true");
+        div.dataset.id = w._id;
+        div.innerHTML = `
     <div class="card-header">
       <span class="card-title"><i class="fas fa-grip-vertical" style="color:#555;margin-right:0.5rem;cursor:grab;"></i><i class="fas fa-play-circle"></i> ${w.num} — ${escapeHtml(w.title)}</span>
       <div style="display:flex;align-items:center;gap:0.75rem;">
@@ -805,262 +1847,486 @@ function buildWorkCard(w) {
       <div class="field"><label>Title</label><input id="wt-${w._id}" value="${escapeHtml(w.title)}" /></div>
       <div class="field"><label>Vimeo ID</label><input id="wv-${w._id}" value="${escapeHtml(w.vimeo)}" /></div>
       <div class="field"><label>Thumbnail</label><input id="wth-${w._id}" value="${escapeHtml(w.thumb)}" /></div>
-      <div class="field"><label>Tags</label><input id="wtg-${w._id}" value="${(w.tags || []).join(', ')}" /></div>
-      <div class="field"><label>Link</label><input id="wl-${w._id}" value="${escapeHtml(w.link || '')}" /></div>
+      <div class="field"><label>Tags</label><input id="wtg-${w._id}" value="${(w.tags || []).join(", ")}" /></div>
+      <div class="field"><label>Link</label><input id="wl-${w._id}" value="${escapeHtml(w.link || "")}" /></div>
     </div>
     <div class="field"><label>Description</label><textarea id="wd-${w._id}" rows="3">${escapeHtml(w.desc)}</textarea></div>
     <button class="btn btn-primary" onclick="updateWork('${w._id}')" style="margin-top: 1rem;">
       <i class="fas fa-save"></i> Save Changes
     </button>
   `;
-  return div;
-}
+        return div;
+      }
 
-async function updateWork(id) {
-  const payload = {
-    title: document.getElementById('wt-' + id).value,
-    vimeo: document.getElementById('wv-' + id).value,
-    thumb: document.getElementById('wth-' + id).value,
-    desc: document.getElementById('wd-' + id).value,
-    tags: document.getElementById('wtg-' + id).value.split(',').map(t => t.trim()).filter(Boolean),
-    link: document.getElementById('wl-' + id).value,
-  };
-  const r = await api(`/api/admin/work/${id}`, 'PUT', payload);
-  showMsg('work-msg', r.error ? '❌ ' + r.error : '✅ Work card updated', !!r.error);
-}
+      async function updateWork(id) {
+        const payload = {
+          title: document.getElementById("wt-" + id).value,
+          vimeo: document.getElementById("wv-" + id).value,
+          thumb: document.getElementById("wth-" + id).value,
+          desc: document.getElementById("wd-" + id).value,
+          tags: document
+            .getElementById("wtg-" + id)
+            .value.split(",")
+            .map((t) => t.trim())
+            .filter(Boolean),
+          link: document.getElementById("wl-" + id).value,
+        };
+        const r = await api(`/api/admin/work/${id}`, "PUT", payload);
+        showMsg(
+          "work-msg",
+          r.error ? "❌ " + r.error : "✅ Work card updated",
+          !!r.error,
+        );
+      }
 
-async function deleteWork(id) {
-  if (!confirm('Delete this work card?')) return;
-  await api(`/api/admin/work/${id}`, 'DELETE');
-  document.getElementById('work-' + id)?.remove();
-  showMsg('work-msg', '✅ Work card deleted');
-}
+      async function deleteWork(id) {
+        if (!confirm("Delete this work card?")) return;
+        await api(`/api/admin/work/${id}`, "DELETE");
+        document.getElementById("work-" + id)?.remove();
+        showMsg("work-msg", "✅ Work card deleted");
+      }
 
-async function addWork() {
-  const tags = document.getElementById('w-tags').value.split(',').map(t => t.trim()).filter(Boolean);
-  const payload = {
-    title: document.getElementById('w-title').value,
-    vimeo: document.getElementById('w-vimeo').value,
-    thumb: document.getElementById('w-thumb').value,
-    desc: document.getElementById('w-desc').value,
-    tags,
-    link: document.getElementById('w-link').value
-  };
-  if (!payload.title || !payload.vimeo || !payload.thumb || !payload.desc) {
-    return showMsg('work-msg', 'Title, Vimeo ID, Thumbnail, and Description are required', true);
-  }
-  const r = await api('/api/admin/work', 'POST', payload);
-  if (r.error) { showMsg('work-msg', r.error, true); return; }
-  showMsg('work-msg', '✅ Work card added successfully!');
-  ['w-title', 'w-vimeo', 'w-thumb', 'w-desc', 'w-tags', 'w-link'].forEach(id => document.getElementById(id).value = '');
-  loadWork();
-}
+      async function addWork() {
+        const tags = document
+          .getElementById("w-tags")
+          .value.split(",")
+          .map((t) => t.trim())
+          .filter(Boolean);
+        const payload = {
+          title: document.getElementById("w-title").value,
+          vimeo: document.getElementById("w-vimeo").value,
+          thumb: document.getElementById("w-thumb").value,
+          desc: document.getElementById("w-desc").value,
+          tags,
+          link: document.getElementById("w-link").value,
+        };
+        if (
+          !payload.title ||
+          !payload.vimeo ||
+          !payload.thumb ||
+          !payload.desc
+        ) {
+          return showMsg(
+            "work-msg",
+            "Title, Vimeo ID, Thumbnail, and Description are required",
+            true,
+          );
+        }
+        const r = await api("/api/admin/work", "POST", payload);
+        if (r.error) {
+          showMsg("work-msg", r.error, true);
+          return;
+        }
+        showMsg("work-msg", "✅ Work card added successfully!");
+        ["w-title", "w-vimeo", "w-thumb", "w-desc", "w-tags", "w-link"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        loadWork();
+      }
 
-// VISITS
-let visitsPage = 1;
+      // VISITS
+      let visitsPage = 1;
 
-async function loadVisitStats() {
-  const s = await api('/api/admin/visits/stats');
-  const wrap = document.getElementById('visit-stats');
-  const items = [
-    { label: 'Total Visits', val: s.total, icon: 'fa-eye' },
-    { label: 'Today', val: s.today, icon: 'fa-calendar-day' },
-    { label: 'This Week', val: s.week, icon: 'fa-calendar-week' },
-    { label: 'Unique IPs', val: s.unique_ips, icon: 'fa-fingerprint' },
-  ];
-  wrap.innerHTML = items.map(i => `
+      async function loadVisitStats() {
+        const s = await api("/api/admin/visits/stats");
+        const wrap = document.getElementById("visit-stats");
+        const items = [
+          { label: "Total Visits", val: s.total, icon: "fa-eye" },
+          { label: "Today", val: s.today, icon: "fa-calendar-day" },
+          { label: "This Week", val: s.week, icon: "fa-calendar-week" },
+          { label: "Unique IPs", val: s.unique_ips, icon: "fa-fingerprint" },
+        ];
+        wrap.innerHTML = items
+          .map(
+            (i) => `
     <div style="background:rgba(15,15,20,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:1rem;text-align:center;">
       <i class="fas ${i.icon}" style="color:#e8622a;font-size:1.3rem;"></i>
       <div style="font-size:1.6rem;font-weight:700;margin:0.4rem 0;">${i.val ?? 0}</div>
       <div style="font-size:0.72rem;color:#888;letter-spacing:1px;text-transform:uppercase;">${i.label}</div>
     </div>
-  `).join('');
-}
+  `,
+          )
+          .join("");
+      }
 
-async function loadVisits(page = 1) {
-  visitsPage = page;
-  const data = await api(`/api/admin/visits?page=${page}`);
-  const tbody = document.getElementById('visits-body');
-  tbody.innerHTML = data.visits.length ? data.visits.map(v => `
+      async function loadVisits(page = 1) {
+        visitsPage = page;
+        const data = await api(`/api/admin/visits?page=${page}`);
+        const tbody = document.getElementById("visits-body");
+        tbody.innerHTML = data.visits.length
+          ? data.visits
+              .map(
+                (v) => `
     <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-      <td style="padding:0.5rem 0.75rem;color:#aaa;white-space:nowrap;">${v.ts}</td>
+      <td style="padding:0.5rem 0.75rem;color:#aaa;white-space:nowrap;">${v.ts ? new Date(v.ts).toLocaleString() : ""}</td>
       <td style="padding:0.5rem 0.75rem;">
-        ${v.name
-          ? `<span style="color:#4ade80;font-weight:600;"><i class="fas fa-user" style="font-size:0.7rem;margin-right:0.3rem;"></i>${escapeHtml(v.name)}</span>`
-          : `<span style="color:#555;font-size:0.75rem;">anonymous</span>`}
+        ${
+          v.name
+            ? `<span style="color:#4ade80;font-weight:600;"><i class="fas fa-user" style="font-size:0.7rem;margin-right:0.3rem;"></i>${escapeHtml(v.name)}</span>`
+            : `<span style="color:#555;font-size:0.75rem;">anonymous</span>`
+        }
       </td>
       <td style="padding:0.5rem 0.75rem;color:#e8622a;font-family:monospace;font-size:0.8rem;">${escapeHtml(v.ip)}</td>
       <td style="padding:0.5rem 0.75rem;color:#fff;">${escapeHtml(v.path)}</td>
-      <td style="padding:0.5rem 0.75rem;color:#60a5fa;font-size:0.75rem;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapeHtml(v.referrer||'')}">${v.referrer ? escapeHtml(v.referrer) : '<span style="color:#444;">direct</span>'}</td>
+      <td style="padding:0.5rem 0.75rem;color:#60a5fa;font-size:0.75rem;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapeHtml(v.referrer || "")}">${v.referrer ? escapeHtml(v.referrer) : '<span style="color:#444;">direct</span>'}</td>
       <td style="padding:0.5rem 0.75rem;color:#666;font-size:0.75rem;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapeHtml(v.ua)}">${escapeHtml(v.ua)}</td>
     </tr>
-  `).join('') : '<tr><td colspan="6" style="padding:1rem;color:#666;">No visits logged yet.</td></tr>';
+  `,
+              )
+              .join("")
+          : '<tr><td colspan="6" style="padding:1rem;color:#666;">No visits logged yet.</td></tr>';
 
-  const pag = document.getElementById('visits-pagination');
-  pag.innerHTML = '';
-  if (data.pages > 1) {
-    for (let p = 1; p <= data.pages; p++) {
-      const btn = document.createElement('button');
-      btn.className = 'btn ' + (p === page ? 'btn-primary' : 'btn-warning');
-      btn.style.padding = '0.4rem 0.8rem';
-      btn.textContent = p;
-      btn.onclick = () => loadVisits(p);
-      pag.appendChild(btn);
-    }
-    const info = document.createElement('span');
-    info.style.cssText = 'color:#888;font-size:0.8rem;margin-left:0.5rem;';
-    info.textContent = `${data.total} total`;
-    pag.appendChild(info);
-  }
-}
+        const pag = document.getElementById("visits-pagination");
+        pag.innerHTML = "";
+        if (data.pages > 1) {
+          for (let p = 1; p <= data.pages; p++) {
+            const btn = document.createElement("button");
+            btn.className =
+              "btn " + (p === page ? "btn-primary" : "btn-warning");
+            btn.style.padding = "0.4rem 0.8rem";
+            btn.textContent = p;
+            btn.onclick = () => loadVisits(p);
+            pag.appendChild(btn);
+          }
+          const info = document.createElement("span");
+          info.style.cssText =
+            "color:#888;font-size:0.8rem;margin-left:0.5rem;";
+          info.textContent = `${data.total} total`;
+          pag.appendChild(info);
+        }
+      }
 
-async function clearVisits() {
-  if (!confirm('Clear all visitor logs?')) return;
-  await api('/api/admin/visits', 'DELETE');
-  showMsg('visits-msg', '✅ Visitor logs cleared');
-  loadVisitStats();
-  loadVisits(1);
-}
+      async function clearVisits() {
+        if (!confirm("Clear all visitor logs?")) return;
+        await api("/api/admin/visits", "DELETE");
+        showMsg("visits-msg", "✅ Visitor logs cleared");
+        loadVisitStats();
+        loadVisits(1);
+      }
 
-// SKILLS
-let availableState = false;
+      // SKILLS
+      let availableState = false;
 
-async function loadAvailable() {
-  const d = await api('/api/about');
-  availableState = !!d.available;
-  const toggle = document.getElementById('avail-toggle');
-  const knob   = document.getElementById('avail-knob');
-  toggle.style.background = availableState ? '#4ade80' : '#333';
-  knob.style.transform    = availableState ? 'translateX(20px)' : 'translateX(0)';
-}
+      async function loadAvailable() {
+        const d = await api("/api/about");
+        availableState = !!d.available;
+        const toggle = document.getElementById("avail-toggle");
+        const knob = document.getElementById("avail-knob");
+        toggle.style.background = availableState ? "#4ade80" : "#333";
+        knob.style.transform = availableState
+          ? "translateX(20px)"
+          : "translateX(0)";
 
-async function toggleAvailable() {
-  availableState = !availableState;
-  await api('/api/admin/available', 'POST', { available: availableState });
-  const toggle = document.getElementById('avail-toggle');
-  const knob   = document.getElementById('avail-knob');
-  toggle.style.background = availableState ? '#4ade80' : '#333';
-  knob.style.transform    = availableState ? 'translateX(20px)' : 'translateX(0)';
-}
+        siteThemeDay = d.theme === "day";
+        const st = document.getElementById("theme-site-toggle");
+        const sk = document.getElementById("theme-site-knob");
+        st.style.background = siteThemeDay ? "#e8622a" : "#333";
+        sk.style.transform = siteThemeDay
+          ? "translateX(20px)"
+          : "translateX(0)";
+      }
 
-async function loadSkills() {
-  const skills = await api('/api/skills');
-  const wrap = document.getElementById('skills-wrap');
-  if (!skills.length) { wrap.innerHTML = '<p style="color:#666;font-size:0.85rem;">No skills yet.</p>'; return; }
-  wrap.innerHTML = skills.map(s => `
-    <div style="display:flex;align-items:center;gap:0.75rem;background:rgba(15,15,20,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:0.75rem 1rem;">
-      <span style="flex:1;font-size:0.9rem;color:#fff;font-weight:600;">${escapeHtml(s.name)}</span>
-      <div style="flex:2;height:4px;background:rgba(255,255,255,0.07);border-radius:2px;overflow:hidden;">
-        <div style="width:${s.level}%;height:100%;background:linear-gradient(90deg,#e8622a,#ff9a5c);border-radius:2px;"></div>
-      </div>
-      <span style="font-size:0.85rem;color:#e8622a;font-weight:700;width:36px;text-align:right;">${s.level}%</span>
-      <button class="btn btn-danger" onclick="deleteSkill('${s._id}')" style="padding:0.35rem 0.6rem;font-size:0.75rem;">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>`).join('');
-}
+      let siteThemeDay = false;
 
-async function addSkill() {
-  const name  = document.getElementById('sk-name').value.trim();
-  const level = parseInt(document.getElementById('sk-level').value);
-  if (!name) return showMsg('skills-msg', 'Skill name required', true);
-  const r = await api('/api/admin/skills', 'POST', { name, level });
-  if (r.error) return showMsg('skills-msg', r.error, true);
-  document.getElementById('sk-name').value = '';
-  showMsg('skills-msg', '✅ Skill added');
-  loadSkills();
-}
+      async function toggleSiteTheme() {
+        siteThemeDay = !siteThemeDay;
+        await api("/api/admin/theme", "POST", { day: siteThemeDay });
+        const st = document.getElementById("theme-site-toggle");
+        const sk = document.getElementById("theme-site-knob");
+        st.style.background = siteThemeDay ? "#e8622a" : "#333";
+        sk.style.transform = siteThemeDay
+          ? "translateX(20px)"
+          : "translateX(0)";
+      }
 
-async function deleteSkill(id) {
-  await api(`/api/admin/skills/${id}`, 'DELETE');
-  showMsg('skills-msg', '✅ Skill removed');
-  loadSkills();
-}
+      async function toggleAvailable() {
+        availableState = !availableState;
+        await api("/api/admin/available", "POST", {
+          available: availableState,
+        });
+        const toggle = document.getElementById("avail-toggle");
+        const knob = document.getElementById("avail-knob");
+        toggle.style.background = availableState ? "#4ade80" : "#333";
+        knob.style.transform = availableState
+          ? "translateX(20px)"
+          : "translateX(0)";
+      }
 
-// INBOX
-async function loadInbox() {
-  const msgs = await api('/api/admin/messages');
-  const wrap = document.getElementById('inbox-wrap');
-  const badge = document.getElementById('unread-badge');
-  const unread = msgs.filter(m => !m.read).length;
-  badge.textContent = unread ? `${unread} unread` : '';
-  if (!msgs.length) { wrap.innerHTML = '<p style="color:#666;font-size:0.85rem;">No messages yet.</p>'; return; }
-  wrap.innerHTML = '';
-  msgs.forEach(m => {
-    const div = document.createElement('div');
-    div.className = 'admin-card';
-    div.style.opacity = m.read ? '0.5' : '1';
-    div.id = 'msg-' + m._id;
-    div.innerHTML = `
+      async function loadSkills() {
+        const skills = await api("/api/skills");
+        const wrap = document.getElementById("skills-wrap");
+        if (!skills.length) {
+          wrap.innerHTML =
+            '<p style="color:#666;font-size:0.85rem;">No skills yet.</p>';
+          return;
+        }
+        wrap.innerHTML = '';
+        skills.forEach((s) => {
+          const div = document.createElement('div');
+          div.setAttribute('draggable', 'true');
+          div.dataset.id = s._id;
+          div.style.cssText = 'display:flex;align-items:center;gap:0.75rem;background:rgba(15,15,20,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:0.75rem 1rem;cursor:grab;';
+          div.innerHTML = `
+            <i class="fas fa-grip-vertical" style="color:#555;flex-shrink:0;"></i>
+            <span style="flex:1;font-size:0.9rem;color:#fff;font-weight:600;">${escapeHtml(s.name)}</span>
+            <div style="flex:2;height:4px;background:rgba(255,255,255,0.07);border-radius:2px;overflow:hidden;">
+              <div style="width:${s.level}%;height:100%;background:linear-gradient(90deg,#e8622a,#ff9a5c);border-radius:2px;"></div>
+            </div>
+            <span style="font-size:0.85rem;color:#e8622a;font-weight:700;width:36px;text-align:right;">${s.level}%</span>
+            <button class="btn btn-danger" onclick="deleteSkill('${s._id}')" style="padding:0.35rem 0.6rem;font-size:0.75rem;margin-top:0;">
+              <i class="fas fa-times"></i>
+            </button>`;
+          wrap.appendChild(div);
+        });
+        enableDrag('skills-wrap', '/api/admin/skills/reorder');
+      }
+
+      async function addSkill() {
+        const name = document.getElementById("sk-name").value.trim();
+        const level = parseInt(document.getElementById("sk-level").value);
+        if (!name) return showMsg("skills-msg", "Skill name required", true);
+        const r = await api("/api/admin/skills", "POST", { name, level });
+        if (r.error) return showMsg("skills-msg", r.error, true);
+        document.getElementById("sk-name").value = "";
+        showMsg("skills-msg", "✅ Skill added");
+        loadSkills();
+      }
+
+      async function deleteSkill(id) {
+        await api(`/api/admin/skills/${id}`, "DELETE");
+        showMsg("skills-msg", "✅ Skill removed");
+        loadSkills();
+      }
+
+      // INBOX
+      async function loadInbox() {
+        const msgs = await api("/api/admin/messages");
+        const wrap = document.getElementById("inbox-wrap");
+        const badge = document.getElementById("unread-badge");
+        const unread = msgs.filter((m) => !m.read).length;
+        badge.textContent = unread ? `${unread} unread` : "";
+        if (!msgs.length) {
+          wrap.innerHTML =
+            '<p style="color:#666;font-size:0.85rem;">No messages yet.</p>';
+          return;
+        }
+        wrap.innerHTML = "";
+        msgs.forEach((m) => {
+          const div = document.createElement("div");
+          div.className = "admin-card";
+          div.style.opacity = m.read ? "0.5" : "1";
+          div.id = "msg-" + m._id;
+          div.innerHTML = `
       <div class="card-header">
         <div>
-          <div class="card-title" style="color:${m.read ? '#888' : '#e8622a'}">${escapeHtml(m.name)} ${m.read ? '(read)' : '<span style="font-size:0.7rem;background:#e8622a;color:#fff;padding:0.1rem 0.5rem;border-radius:100px;">NEW</span>'}</div>
+          <div class="card-title" style="color:${m.read ? "#888" : "#e8622a"}">${escapeHtml(m.name)} ${m.read ? "(read)" : '<span style="font-size:0.7rem;background:#e8622a;color:#fff;padding:0.1rem 0.5rem;border-radius:100px;">NEW</span>'}</div>
           <div style="font-size:0.8rem;color:#888;margin-top:0.3rem;">${escapeHtml(m.email)} &bull; ${m.date}</div>
         </div>
         <div style="display:flex;gap:0.5rem;">
-          ${!m.read ? `<button class="btn btn-warning" onclick="markRead('${m._id}')"><i class="fas fa-check"></i> Mark Read</button>` : ''}
+          ${!m.read ? `<button class="btn btn-warning" onclick="markRead('${m._id}')"><i class="fas fa-check"></i> Mark Read</button>` : ""}
           <button class="btn btn-danger" onclick="deleteMsg('${m._id}')"><i class="fas fa-trash"></i></button>
         </div>
       </div>
       <p style="font-size:0.9rem;color:#ccc;margin-top:0.5rem;line-height:1.6;">${escapeHtml(m.message)}</p>
     `;
-    wrap.appendChild(div);
-  });
-}
+          wrap.appendChild(div);
+        });
+      }
 
-async function markRead(id) {
-  await api(`/api/admin/messages/${id}/read`, 'POST');
-  loadInbox();
-}
+      async function markRead(id) {
+        await api(`/api/admin/messages/${id}/read`, "POST");
+        loadInbox();
+      }
 
-async function deleteMsg(id) {
-  if (!confirm('Delete this message?')) return;
-  await api(`/api/admin/messages/${id}`, 'DELETE');
-  document.getElementById('msg-' + id)?.remove();
-  showMsg('inbox-msg', 'Message deleted');
-}
+      async function deleteMsg(id) {
+        if (!confirm("Delete this message?")) return;
+        await api(`/api/admin/messages/${id}`, "DELETE");
+        document.getElementById("msg-" + id)?.remove();
+        showMsg("inbox-msg", "Message deleted");
+      }
 
-// DRAG TO REORDER
-function enableDrag(containerId, saveUrl) {
-  const container = document.getElementById(containerId);
-  let dragged = null;
-  container.addEventListener('dragstart', e => {
-    dragged = e.target.closest('[draggable]');
-    setTimeout(() => dragged && (dragged.style.opacity = '0.4'), 0);
-  });
-  container.addEventListener('dragend', e => {
-    if (dragged) dragged.style.opacity = '1';
-    dragged = null;
-    saveOrder(containerId, saveUrl);
-  });
-  container.addEventListener('dragover', e => {
-    e.preventDefault();
-    const target = e.target.closest('[draggable]');
-    if (target && target !== dragged) {
-      const rect = target.getBoundingClientRect();
-      const after = e.clientY > rect.top + rect.height / 2;
-      container.insertBefore(dragged, after ? target.nextSibling : target);
-    }
-  });
-}
+      // DRAG TO REORDER
+      function enableDrag(containerId, saveUrl) {
+        const container = document.getElementById(containerId);
+        let dragged = null;
+        container.addEventListener("dragstart", (e) => {
+          dragged = e.target.closest("[draggable]");
+          setTimeout(() => dragged && (dragged.style.opacity = "0.4"), 0);
+        });
+        container.addEventListener("dragend", (e) => {
+          if (dragged) dragged.style.opacity = "1";
+          dragged = null;
+          saveOrder(containerId, saveUrl);
+        });
+        container.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          const target = e.target.closest("[draggable]");
+          if (target && target !== dragged) {
+            const rect = target.getBoundingClientRect();
+            const after = e.clientY > rect.top + rect.height / 2;
+            container.insertBefore(
+              dragged,
+              after ? target.nextSibling : target,
+            );
+          }
+        });
+      }
 
-function saveOrder(containerId, saveUrl) {
-  const container = document.getElementById(containerId);
-  const items = [...container.querySelectorAll('[draggable]')];
-  const order = items.map((el, i) => ({ id: el.dataset.id, order: i }));
-  api(saveUrl, 'POST', { order });
-}
+      function saveOrder(containerId, saveUrl) {
+        const container = document.getElementById(containerId);
+        const items = [...container.querySelectorAll("[draggable]")];
+        const order = items.map((el, i) => ({ id: el.dataset.id, order: i }));
+        api(saveUrl, "POST", { order });
+      }
 
-// Initialize — must be last, after all functions are defined
-loadAbout();
-loadAvailable();
-loadSkills();
-loadCredits();
-loadWork();
-loadInbox();
-loadVisitStats();
-loadVisits();
+      // THEME
+      (function () {
+        const btn = document.getElementById("theme-toggle");
+        if (localStorage.getItem("utk_admin_theme") === "day") {
+          document.body.classList.add("day");
+          btn.textContent = "☀️";
+        }
+      })();
 
-</script>
-</body>
+      function toggleTheme() {
+        const isDay = document.body.classList.toggle("day");
+        const btn = document.getElementById("theme-toggle");
+        btn.textContent = isDay ? "☀️" : "🌙";
+        localStorage.setItem("utk_admin_theme", isDay ? "day" : "dark");
+      }
+
+      // RATINGS ADMIN
+      async function loadRatingsAdmin() {
+        try {
+          const ratings = await api("/api/admin/ratings");
+          const stats = await api("/api/ratings");
+
+          document.getElementById("admin-avg-rating").textContent =
+            stats.average.toFixed(1);
+          document.getElementById("admin-total-ratings").textContent =
+            stats.total;
+
+          const wrap = document.getElementById("ratings-list");
+          if (!ratings.length) {
+            wrap.innerHTML =
+              '<p style="color:#666;font-size:0.85rem;">No ratings yet.</p>';
+            return;
+          }
+
+          wrap.innerHTML = ratings
+            .map(
+              (r) => `
+      <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <div style="display: flex; gap: 5px; margin-bottom: 8px;">
+              ${Array(5)
+                .fill()
+                .map(
+                  (_, i) =>
+                    `<i class="fas fa-star" style="color: ${i < r.value ? "#ffc107" : "#555"}; font-size: 16px;"></i>`,
+                )
+                .join("")}
+            </div>
+            <div style="font-weight: 600; color: var(--text);">${escapeHtml(r.name)}</div>
+            <div style="font-size: 0.8rem; color: #888; margin-top: 4px;">${r.created_at}</div>
+            ${r.comment ? `<div style="margin-top: 10px; color: #aaa; font-size: 0.85rem;">"${escapeHtml(r.comment)}"</div>` : ""}
+          </div>
+          <button class="btn btn-danger" onclick="deleteRating('${r._id}')" style="padding: 0.4rem 0.8rem;">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </div>
+      </div>
+    `,
+            )
+            .join("");
+        } catch (error) {
+          console.error("Error loading ratings:", error);
+        }
+      }
+
+      async function deleteRating(id) {
+        if (!confirm("Delete this rating?")) return;
+        await api(`/api/admin/ratings/${id}`, "DELETE");
+        showMsg("ratings-msg", "✅ Rating deleted");
+        loadRatingsAdmin();
+      }
+
+      // STILLS
+      async function loadStills() {
+        const items = await api('/api/stills');
+        const wrap = document.getElementById('stills-wrap');
+        if (!items.length) {
+          wrap.innerHTML = '<p style="color:#666;font-size:0.85rem;">No stills yet.</p>';
+          return;
+        }
+        wrap.innerHTML = '';
+        items.forEach((s) => {
+          const div = document.createElement('div');
+          div.className = 'admin-card';
+          div.id = 'still-' + s._id;
+          div.setAttribute('draggable', 'true');
+          div.dataset.id = s._id;
+          div.innerHTML = `
+            <div class="card-header">
+              <span class="card-title"><i class="fas fa-grip-vertical" style="color:#555;margin-right:0.5rem;cursor:grab;"></i><i class="fas fa-image"></i></span>
+              <button class="btn btn-danger" onclick="deleteStill('${s._id}')" style="margin-top:0;"><i class="fas fa-trash"></i></button>
+            </div>
+            <img src="${escapeHtml(s.url)}" style="width:100%;height:120px;object-fit:cover;border-radius:6px;margin-bottom:0.75rem;" onerror="this.style.display='none'" />
+            <div class="field" style="margin-bottom:0.5rem;"><label>Image URL</label><input id="stu-${s._id}" value="${escapeHtml(s.url)}" /></div>
+            <div class="field" style="margin-bottom:0.75rem;"><label>Caption</label><input id="stc-${s._id}" value="${escapeHtml(s.caption || '')}" /></div>
+            <button class="btn btn-primary" onclick="updateStill('${s._id}')" style="margin-top:0;"><i class="fas fa-save"></i> Save</button>
+          `;
+          wrap.appendChild(div);
+        });
+        enableDrag('stills-wrap', '/api/admin/stills/reorder');
+      }
+
+      async function addStill() {
+        const url = document.getElementById('st-url').value.trim();
+        if (!url) return showMsg('stills-msg', 'Image URL required', true);
+        const r = await api('/api/admin/stills', 'POST', {
+          url,
+          caption: document.getElementById('st-caption').value.trim(),
+        });
+        if (r.error) return showMsg('stills-msg', r.error, true);
+        document.getElementById('st-url').value = '';
+        document.getElementById('st-caption').value = '';
+        showMsg('stills-msg', '✅ Still added');
+        loadStills();
+      }
+
+      async function updateStill(id) {
+        const r = await api(`/api/admin/stills/${id}`, 'PUT', {
+          url:     document.getElementById('stu-' + id).value.trim(),
+          caption: document.getElementById('stc-' + id).value.trim(),
+        });
+        showMsg('stills-msg', r.error ? '❌ ' + r.error : '✅ Still updated', !!r.error);
+        if (!r.error) loadStills();
+      }
+
+      async function deleteStill(id) {
+        if (!confirm('Delete this still?')) return;
+        await api(`/api/admin/stills/${id}`, 'DELETE');
+        document.getElementById('still-' + id)?.remove();
+        showMsg('stills-msg', '✅ Still deleted');
+      }
+
+      // Initialize — must be last, after all functions are defined
+      loadAbout();
+      loadRatingsAdmin();
+      loadAvailable();
+      loadSkills();
+      loadCompanies();
+      loadTimeline();
+      loadAwards();
+      loadBlogs();
+      loadCredits();
+      loadWork();
+      loadInbox();
+      loadVisitStats();
+      loadVisits();
+      loadStills();
+    </script>
+  </body>
 </html>

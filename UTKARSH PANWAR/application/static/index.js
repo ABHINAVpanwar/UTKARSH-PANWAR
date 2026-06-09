@@ -1,8 +1,12 @@
-// ── PRELOADER PARTICLES ──
+// ── PRELOADER PARTICLES + LOAD PROGRESS ──
 (function () {
   const canvas = document.getElementById("preloader-canvas");
   const ctx = canvas.getContext("2d");
+  const pctEl = document.getElementById("preloader-pct");
   let W, H, particles = [], raf;
+  let displayedPct = 0;   // smoothly animated value
+  let targetPct    = 0;   // real tracked value
+  let dismissed    = false;
 
   function resize() {
     W = canvas.width = window.innerWidth;
@@ -33,9 +37,47 @@
       if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
       if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
     });
+    // Smoothly animate displayed percentage toward target
+    if (displayedPct < targetPct) {
+      displayedPct = Math.min(displayedPct + 1.2, targetPct);
+      if (pctEl) pctEl.textContent = Math.floor(displayedPct) + "%";
+    }
     raf = requestAnimationFrame(drawParticles);
   }
   drawParticles();
+
+  // ── Track real resource loading ──
+  const resources = performance.getEntriesByType
+    ? performance.getEntriesByType("resource")
+    : [];
+
+  // Use PerformanceObserver to count resources as they finish
+  let loaded = 0;
+  let total  = Math.max(1, resources.length || 20); // initial estimate
+
+  function setProgress(pct) {
+    targetPct = Math.min(99, Math.max(targetPct, pct));
+  }
+
+  // Track resources landing via PerformanceObserver
+  if (typeof PerformanceObserver !== "undefined") {
+    try {
+      const obs = new PerformanceObserver((list) => {
+        loaded += list.getEntries().length;
+        total   = Math.max(total, loaded + 2);
+        setProgress(Math.round((loaded / total) * 92));
+      });
+      obs.observe({ type: "resource", buffered: true });
+    } catch(e) {}
+  }
+
+  // Simulate smooth early progress so counter isn't stuck at 0
+  let fake = 0;
+  const fakeTimer = setInterval(() => {
+    fake += Math.random() * 6;
+    setProgress(Math.min(fake, 60));
+    if (fake >= 60) clearInterval(fakeTimer);
+  }, 180);
 
   // Preloader letter animation
   const letters = ["letter1", "letter2", "letter3"].map((id) => document.getElementById(id));
@@ -49,16 +91,42 @@
     }, i * 500);
   });
 
-  setTimeout(() => {
-    const pre = document.getElementById("preloader");
-    pre.style.opacity = "0";
-    setTimeout(() => {
-      pre.style.display = "none";
-      cancelAnimationFrame(raf);
-      initHeroParticles();
-      scrambleHeroName();
-    }, 800);
-  }, 3200);
+  function dismissPreloader() {
+    if (dismissed) return;
+    dismissed = true;
+    clearInterval(fakeTimer);
+    // Snap to 100%
+    targetPct = 100;
+    // Wait for the counter to visually hit 100 before fading
+    const waitFor100 = setInterval(() => {
+      if (displayedPct >= 99) {
+        clearInterval(waitFor100);
+        if (pctEl) pctEl.textContent = "100%";
+        const pre = document.getElementById("preloader");
+        setTimeout(() => {
+          pre.style.opacity = "0";
+          setTimeout(() => {
+            pre.style.display = "none";
+            cancelAnimationFrame(raf);
+            initHeroParticles();
+            scrambleHeroName();
+          }, 800);
+        }, 300);
+      }
+    }, 30);
+  }
+
+  // Dismiss when page fully loaded AND minimum letter animation done (≥1.8s)
+  const MIN_SHOW = 1800;
+  const startTime = Date.now();
+  window.addEventListener("load", () => {
+    const elapsed = Date.now() - startTime;
+    const wait    = Math.max(0, MIN_SHOW - elapsed);
+    setTimeout(dismissPreloader, wait);
+  });
+
+  // Hard fallback: dismiss after 8s no matter what
+  setTimeout(dismissPreloader, 8000);
 })();
 
 // ── HERO NAME LETTER REVEAL ──
@@ -228,32 +296,15 @@ function closeShowreel() {
 B1.addEventListener("click", openShowreel);
 showreelModal.addEventListener("click", (e) => { if (e.target === showreelModal) closeShowreel(); });
 
-// ── STILLS LIGHTBOX ──
+// ── STILLS LIGHTBOX ── (wired dynamically by syncStills in index.html)
 const lightbox = document.getElementById("lightbox");
 const lightboxImg = document.getElementById("lightbox-img");
-const stillItems = [...document.querySelectorAll(".still-item")];
-const srcs = stillItems.map(el => el.querySelector("img").src);
-let currentIndex = 0;
-
-function openLightbox(i) {
-  currentIndex = i;
-  lightboxImg.src = srcs[i];
-  lightbox.classList.add("open");
-  document.body.style.overflow = "hidden";
-}
-function closeLightbox() {
-  lightbox.classList.remove("open");
-  lightboxImg.src = "";
-  document.body.style.overflow = "";
-}
-function showNext() { currentIndex = (currentIndex + 1) % srcs.length; lightboxImg.src = srcs[currentIndex]; }
-function showPrev() { currentIndex = (currentIndex - 1 + srcs.length) % srcs.length; lightboxImg.src = srcs[currentIndex]; }
-
-stillItems.forEach((item, i) => item.addEventListener("click", () => openLightbox(i)));
-document.getElementById("lightbox-close").addEventListener("click", closeLightbox);
-document.getElementById("lightbox-next").addEventListener("click", showNext);
-document.getElementById("lightbox-prev").addEventListener("click", showPrev);
-lightbox.addEventListener("click", (e) => { if (e.target === lightbox) closeLightbox(); });
+lightbox.addEventListener("click", (e) => {
+  if (e.target === lightbox) {
+    lightbox.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+});
 
 // ── STILLS MOBILE DOTS INDICATOR ──
 (function () {
@@ -316,10 +367,22 @@ document.querySelectorAll(".wc-close").forEach((btn) => {
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     if (showreelModal.classList.contains("open")) closeShowreel();
-    else if (lightbox.classList.contains("open")) closeLightbox();
+    else if (lightbox.classList.contains("open")) {
+      lightbox.classList.remove("open");
+      document.body.style.overflow = "";
+    }
   }
-  if (e.key === "ArrowRight" && lightbox.classList.contains("open")) showNext();
-  if (e.key === "ArrowLeft" && lightbox.classList.contains("open")) showPrev();
+  if (lightbox.classList.contains("open") && window._stillsSrcs) {
+    const img = document.getElementById("lightbox-img");
+    if (e.key === "ArrowRight") {
+      window._stillsIndex = (window._stillsIndex + 1) % window._stillsSrcs.length;
+      img.src = window._stillsSrcs[window._stillsIndex];
+    }
+    if (e.key === "ArrowLeft") {
+      window._stillsIndex = (window._stillsIndex - 1 + window._stillsSrcs.length) % window._stillsSrcs.length;
+      img.src = window._stillsSrcs[window._stillsIndex];
+    }
+  }
   if (e.key === "f" || e.key === "F") {
     if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
     else document.exitFullscreen?.();

@@ -43,7 +43,7 @@ def set_security_headers(response):
         "frame-src https://player.vimeo.com https://www.youtube.com https://www.youtube-nocookie.com "
                    "https://youtube.com https://www.facebook.com; "
         "media-src 'self'; "
-        "connect-src 'self' https://player.vimeo.com https://f.vimeocdn.com https://fresnel.vimeocdn.com;"
+        "connect-src 'self' https://player.vimeo.com https://f.vimeocdn.com https://fresnel.vimeocdn.com https://api.open-meteo.com;"
     )
     return response
 
@@ -78,6 +78,7 @@ MONGO_URI    = os.environ.get(
     'mongodb+srv://utkarsh:utk1234@cluster0.koygnga.mongodb.net/?appName=Cluster0'
 )
 MONGO_DB_NAME = os.environ.get('MONGO_DB_NAME', 'utk_portfolio')
+WEB3FORMS_KEY = os.environ.get('WEB3FORMS_KEY', '4d6d075d-2a50-465e-acb1-6e59d6039eb6')
 
 try:
     mongo_client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
@@ -89,12 +90,22 @@ try:
     messages_col = db['messages']
     visits_col   = db['visits']
     skills_col   = db['skills']
+    awards_col   = db['awards']
+    blogs_col    = db['blogs']
+    timeline_col = db['timeline']
+    companies_col = db['companies']
+    ratings_col  = db['ratings']
+    stills_col   = db['stills']
     logger.info("✅ MongoDB connected successfully!")
 except Exception as e:
     logger.error(f"❌ MongoDB connection failed: {e}")
-    db = about_col = credits_col = work_col = messages_col = visits_col = skills_col = None
+    db = about_col = credits_col = work_col = messages_col = visits_col = skills_col = awards_col = blogs_col = timeline_col = companies_col = ratings_col = stills_col = None
 
 atexit.register(lambda: mongo_client.close() if mongo_client is not None else None)
+
+@app.route('/api/config')
+def get_config():
+    return jsonify({'web3forms_key': WEB3FORMS_KEY})
 
 # ── SEED DEFAULT DATA ─────────────────────────────────────────────────────────
 def seed():
@@ -108,7 +119,17 @@ def seed():
             'role': 'FX TD · DNEG',
             'hero_tag': 'FX TD @ DNEG',
             'hero_desc': 'Versatile Visual Effects Artist — transforming imagination into cinematic reality through Houdini, Nuke & beyond.',
-            'exp_hours': 7000,
+            'exp_hours': 10000,
+            'email': 'utkarshpanwar01@gmail.com',
+            'phone': '+91 8810669600',
+            'showreel': 'https://player.vimeo.com/video/836954122?h=351a362af3&autoplay=1&title=0&byline=0&portrait=0',
+            'social_links': {
+                'linkedin': 'https://www.linkedin.com/in/utkarsh-panwar/',
+                'vimeo': 'https://vimeo.com/user146712461',
+                'resume': '',
+                'artstation': 'https://www.artstation.com/utkarshpanwar11',
+                'instagram': 'https://www.instagram.com/utkarshpanwar11/',
+            },
             'cards': [
                 {'icon': 'fa-regular fa-user', 'title': 'WHO AM I', 'text': 'VFX artist with 3+ years of studio experience, currently an FX TD at DNEG bringing imagination to life through cutting-edge visual effects.'},
                 {'icon': 'fa-solid fa-tv', 'title': 'WHAT I DO', 'text': 'FX and Compositing — creating realistic simulations in Houdini and integrating them seamlessly in Nuke for cinematic storytelling.'},
@@ -117,60 +138,6 @@ def seed():
             ]
         })
         logger.info("Seeded About data")
-
-    if credits_col.count_documents({}) == 0:
-        credits_col.insert_many([
-            {'category': 'Movies', 'order': 0, 'videos': [
-                {'embed': 'https://www.youtube.com/embed/aF08WVSvCok?si=QgolsovMou3aGv6z', 'caption': 'TOXIC'},
-                {'embed': 'https://www.youtube.com/embed/ebAznVtYY84?si=rdk2BZb3Uz2gwTci', 'caption': 'IKKIS'},
-                {'embed': 'https://www.youtube.com/embed/qx6dGxCQD-M?si=tnZ5A_mrOJLtdint', 'caption': 'BORDER 2'},
-                {'embed': 'https://www.youtube.com/embed/Mod_oXpftJA?si=c4hpWCV9bGKSZxPL', 'caption': 'THAMMA'},
-            ]},
-            {'category': 'Masha and Bear', 'order': 1, 'videos': [
-                {'embed': 'https://www.youtube-nocookie.com/embed/iLEGrPo6zVc', 'caption': 'Episode 1'},
-                {'embed': 'https://www.youtube-nocookie.com/embed/Z0mnhCY7ofE', 'caption': 'Episode 2'},
-                {'embed': 'https://www.youtube-nocookie.com/embed/FzhOMZIQLr8', 'caption': 'Episode 3'},
-                {'embed': 'https://youtube.com/embed/UhKudfHrmUA?si=Z8o_9tWrFQuKSS3N', 'caption': 'Episode 4'},
-            ]},
-            {'category': 'Other Projects', 'order': 2, 'videos': [
-                {'embed': 'https://player.vimeo.com/video/894178647?dnt=1', 'caption': 'Luka Clone'},
-                {'embed': 'https://player.vimeo.com/video/894175740?dnt=1', 'caption': 'Spiderman'},
-                {'embed': 'https://player.vimeo.com/video/894174504?dnt=1', 'caption': 'Love Dosti India'},
-            ]},
-        ])
-        logger.info("Seeded Credits data")
-
-    if work_col.count_documents({}) == 0:
-        work_col.insert_many([
-            {'order': 0, 'num': '01', 'vimeo': '894517786?h=e09950ed39', 'thumb': 'IMAGE/1.jpg',
-             'title': 'Houdini Burning Tower', 'tags': ['FX', 'Houdini', 'Pyro'],
-             'desc': 'A large-scale fire and destruction simulation built entirely in Houdini — pyro, rigid body dynamics, and custom shading for a cinematic result.',
-             'link': 'https://utkarshpanwar11.artstation.com/projects/rJZ3mm'},
-            {'order': 1, 'num': '02', 'vimeo': '807377032?h=685092efbc', 'thumb': 'IMAGE/2.jpg',
-             'title': 'Melting Statue', 'tags': ['FX', 'Simulation', 'FLIP'],
-             'desc': 'A fluid simulation of a stone statue melting under extreme heat — combining FLIP fluids, surface tension, and viscosity controls in Houdini.',
-             'link': 'https://utkarshpanwar11.artstation.com/projects/zPPlbw'},
-            {'order': 2, 'num': '03', 'vimeo': '894519229?h=f10b4f3753', 'thumb': 'IMAGE/3.jpg',
-             'title': 'Houdini Destruction', 'tags': ['FX', 'Destruction', 'RBD'],
-             'desc': 'Procedural building destruction using Voronoi fracturing, constraint networks, and debris systems — fully art-directable and production-ready.',
-             'link': 'https://utkarshpanwar11.artstation.com/projects/ob20dL'},
-            {'order': 3, 'num': '04', 'vimeo': '836954122?h=351a362af3', 'thumb': 'IMAGE/4.png',
-             'title': 'Clouds', 'tags': ['VFX', 'Houdini', 'Volumes'],
-             'desc': "Volumetric cloud simulation using Houdini's sparse pyro solver — achieving photorealistic cumulus formations with full lighting and shading control.",
-             'link': ''},
-        ])
-        logger.info("Seeded Work data")
-
-    if skills_col.count_documents({}) == 0:
-        skills_col.insert_many([
-            {'name': 'Houdini',  'level': 95, 'order': 0},
-            {'name': 'Nuke',     'level': 85, 'order': 1},
-            {'name': 'Maya',     'level': 75, 'order': 2},
-            {'name': '3ds Max',  'level': 70, 'order': 3},
-            {'name': 'Python',   'level': 65, 'order': 4},
-            {'name': 'Renderman','level': 80, 'order': 5},
-        ])
-        logger.info("Seeded Skills data")
 
 seed()
 
@@ -189,6 +156,8 @@ migrate()
 
 # ── VISITOR LOGGING ───────────────────────────────────────────────────────────
 SKIP_PATHS = {'/static', '/api', '/favicon'}
+SKIP_UA    = {'Mozilla/5.0+(compatible; UptimeRobot/2.0; http://www.uptimerobot.com/)'}
+BOT_FILTER = {'ua': {'$nin': list(SKIP_UA)}}
 
 @app.before_request
 def log_visit():
@@ -196,6 +165,8 @@ def log_visit():
         return
     path = request.path
     if any(path.startswith(p) for p in SKIP_PATHS):
+        return
+    if request.headers.get('User-Agent', '') in SKIP_UA:
         return
     visitor_name = sanitize(request.cookies.get('utk_vname') or '', max_len=80)
     referrer     = sanitize(request.headers.get('Referer') or '', max_len=300)
@@ -215,11 +186,11 @@ def get_visits():
         return jsonify([]), 500
     page     = max(1, int(request.args.get('page', 1)))
     per_page = 50
-    total    = visits_col.count_documents({})
-    docs     = list(visits_col.find({}).sort('ts', -1).skip((page - 1) * per_page).limit(per_page))
+    total    = visits_col.count_documents(BOT_FILTER)
+    docs     = list(visits_col.find(BOT_FILTER).sort('ts', -1).skip((page - 1) * per_page).limit(per_page))
     for d in docs:
         d['_id'] = str(d['_id'])
-        d['ts']  = d['ts'].strftime('%d %b %Y, %H:%M:%S') if d.get('ts') else ''
+        d['ts']  = d['ts'].strftime('%Y-%m-%dT%H:%M:%SZ') if d.get('ts') else ''
     return jsonify({'visits': docs, 'total': total, 'page': page, 'pages': -(-total // per_page)})
 
 @app.route('/api/admin/visits/stats')
@@ -227,15 +198,16 @@ def get_visits():
 def visit_stats():
     if visits_col is None:
         return jsonify({}), 500
-    total      = visits_col.count_documents({})
+    total      = visits_col.count_documents(BOT_FILTER)
     today      = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=timezone.utc)
-    today_count = visits_col.count_documents({'ts': {'$gte': today}})
-    week_count  = visits_col.count_documents({'ts': {'$gte': today - timedelta(days=7)}})
+    today_count = visits_col.count_documents({**BOT_FILTER, 'ts': {'$gte': today}})
+    week_count  = visits_col.count_documents({**BOT_FILTER, 'ts': {'$gte': today - timedelta(days=7)}})
     top_pages   = list(visits_col.aggregate([
+        {'$match': BOT_FILTER},
         {'$group': {'_id': '$path', 'count': {'$sum': 1}}},
         {'$sort': {'count': -1}}, {'$limit': 5}
     ]))
-    unique_ips  = len(visits_col.distinct('ip'))
+    unique_ips  = len(visits_col.distinct('ip', BOT_FILTER))
     return jsonify({'total': total, 'today': today_count, 'week': week_count,
                     'unique_ips': unique_ips, 'top_pages': top_pages})
 
@@ -246,6 +218,118 @@ def clear_visits():
         return jsonify({}), 500
     visits_col.delete_many({})
     return jsonify({'status': 'cleared'})
+
+# ── RATINGS API ─────────────────────────────────────────────────────────────
+@app.route('/api/ratings', methods=['GET'])
+def get_ratings():
+    """Get average rating and total count"""
+    if ratings_col is None:
+        return jsonify({'average': 0, 'total': 0}), 500
+    
+    # Get all ratings
+    all_ratings = list(ratings_col.find({}, {'value': 1}))
+    total = len(all_ratings)
+    
+    if total == 0:
+        return jsonify({'average': 0, 'total': 0, 'stars': [0,0,0,0,0]})
+    
+    # Calculate average
+    avg = sum(r['value'] for r in all_ratings) / total
+    
+    # Calculate distribution (how many of each star)
+    distribution = [0, 0, 0, 0, 0]
+    for r in all_ratings:
+        if 1 <= r['value'] <= 5:
+            distribution[r['value'] - 1] += 1
+    
+    return jsonify({
+        'average': round(avg, 1),
+        'total': total,
+        'distribution': distribution
+    })
+
+@app.route('/api/ratings', methods=['POST'])
+@limiter.limit('3 per hour')  # Prevent spam
+def submit_rating():
+    """Submit a new rating"""
+    if ratings_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    
+    data = request.json or {}
+    rating = data.get('rating')
+    name = sanitize(data.get('name', 'Anonymous'), max_len=100)
+    comment = sanitize(data.get('comment', ''), max_len=500)
+    
+    # Validate rating
+    if not rating or not isinstance(rating, (int, float)):
+        return jsonify({'error': 'Valid rating (1-5) required'}), 400
+    
+    rating = int(rating)
+    if rating < 1 or rating > 5:
+        return jsonify({'error': 'Rating must be between 1 and 5'}), 400
+    
+    # Get IP for duplicate prevention (optional)
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr).split(',')[0].strip()
+    
+    # Check if this IP already rated in last 24 hours (optional anti-spam)
+    last_day = datetime.now(timezone.utc) - timedelta(hours=24)
+    recent = ratings_col.count_documents({
+        'ip': ip,
+        'created_at': {'$gte': last_day}
+    })
+    
+    if recent >= 2:  # Max 2 ratings per IP per day
+        return jsonify({'error': 'You have reached the rating limit for today'}), 429
+    
+    # Save rating
+    result = ratings_col.insert_one({
+        'value': rating,
+        'name': name,
+        'comment': comment,
+        'ip': ip,
+        'created_at': datetime.now(timezone.utc)
+    })
+    
+    # Get updated stats
+    all_ratings = list(ratings_col.find({}, {'value': 1}))
+    total = len(all_ratings)
+    avg = sum(r['value'] for r in all_ratings) / total if total > 0 else 0
+    
+    return jsonify({
+        'status': 'submitted',
+        'average': round(avg, 1),
+        'total': total,
+        'rating_id': str(result.inserted_id)
+    })
+
+@app.route('/api/admin/ratings')
+@login_required
+def get_all_ratings():
+    """Admin endpoint to view all ratings"""
+    if ratings_col is None:
+        return jsonify([]), 500
+    
+    ratings = list(ratings_col.find({}).sort('created_at', -1))
+    for r in ratings:
+        r['_id'] = str(r['_id'])
+        r['created_at'] = r['created_at'].strftime('%Y-%m-%d %H:%M:%S') if r.get('created_at') else ''
+        r.pop('ip', None)  # Hide IP from admin view for privacy
+    
+    return jsonify(ratings)
+
+@app.route('/api/admin/ratings/<rating_id>', methods=['DELETE'])
+@login_required
+def delete_rating(rating_id):
+    """Admin endpoint to delete a rating"""
+    if ratings_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    
+    oid = safe_object_id(rating_id)
+    if not oid:
+        return jsonify({'error': 'Invalid id'}), 400
+    
+    ratings_col.delete_one({'_id': oid})
+    return jsonify({'status': 'deleted'})
 
 # ── VISITOR IDENTIFY (patch current visit with name on first save) ────────────
 @app.route('/api/visitor/identify', methods=['POST'])
@@ -277,7 +361,16 @@ def index():
     about   = (about_col.find_one({'_id': 'about'}, {'_id': 0}) or {}) if about_col is not None else {}
     credits = list(credits_col.find({}, {'_id': 0}).sort('order', 1)) if credits_col is not None else []
     work    = list(work_col.find({}, {'_id': 0}).sort('order', 1)) if work_col is not None else []
-    return render_template('index.html', about=about, credits=credits, work=work)
+    companies = list(companies_col.find({}, {'_id': 0}).sort('order', 1)) if companies_col is not None else []
+    ratings_stats = {'average': 0, 'total': 0}
+    if ratings_col is not None:
+        all_ratings = list(ratings_col.find({}, {'value': 1}))
+        total = len(all_ratings)
+        if total > 0:
+            avg = sum(r['value'] for r in all_ratings) / total
+            ratings_stats = {'average': round(avg, 1), 'total': total}
+
+    return render_template('index.html', about=about, credits=credits, work=work, companies=companies, ratings=ratings_stats)
 
 @app.route('/api/work/<work_id>/view', methods=['POST'])
 def track_view(work_id):
@@ -321,7 +414,7 @@ def update_about():
     if about_col is None:
         return jsonify({'error': 'DB unavailable'}), 500
     data    = request.json or {}
-    allowed = {'role', 'hero_tag', 'hero_desc', 'exp_hours', 'cards'}
+    allowed = {'role', 'hero_tag', 'hero_desc', 'exp_hours', 'cards', 'profile_url', 'location', 'social_links', 'email', 'phone', 'showreel'}
     update  = {k: v for k, v in data.items() if k in allowed}
     if not update:
         return jsonify({'error': 'Nothing to update'}), 400
@@ -589,6 +682,210 @@ def set_available():
     about_col.update_one({'_id': 'about'}, {'$set': {'available': val}}, upsert=True)
     return jsonify({'status': 'updated', 'available': val})
 
+@app.route('/api/admin/theme', methods=['POST'])
+@login_required
+def set_theme():
+    if about_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    theme = 'day' if (request.json or {}).get('day') else 'dark'
+    about_col.update_one({'_id': 'about'}, {'$set': {'theme': theme}}, upsert=True)
+    return jsonify({'status': 'updated', 'theme': theme})
+
+@app.route('/api/weather')
+def get_weather():
+    if about_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    doc = about_col.find_one({'_id': 'about'}, {'location': 1}) or {}
+    loc = doc.get('location', {})
+    lat, lon = loc.get('lat'), loc.get('lon')
+    city = loc.get('city', '')
+    if not lat or not lon:
+        return jsonify({'error': 'no location set'}), 404
+    return jsonify({'city': city, 'lat': lat, 'lon': lon})
+
+# ── TIMELINE API ─────────────────────────────────────────────────────────────
+@app.route('/api/timeline')
+def get_timeline():
+    if timeline_col is None:
+        return jsonify([]), 500
+    items = list(timeline_col.find({}).sort('order', 1))
+    for i in items:
+        i['_id'] = str(i['_id'])
+    return jsonify(items)
+
+@app.route('/api/admin/timeline', methods=['POST'])
+@login_required
+def add_timeline():
+    if timeline_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    data  = request.json or {}
+    role  = sanitize(data.get('role')    or '', max_len=200)
+    org   = sanitize(data.get('org')     or '', max_len=200)
+    period= sanitize(data.get('period')  or '', max_len=50)
+    desc  = sanitize(data.get('desc')    or '', max_len=500)
+    tags  = [sanitize(t, max_len=50) for t in data.get('tags', []) if t][:8]
+    if not role or not org:
+        return jsonify({'error': 'role and org required'}), 400
+    top   = timeline_col.find_one(sort=[('order', -1)])
+    order = (top['order'] + 1) if top else 0
+    result = timeline_col.insert_one({'role': role, 'org': org, 'period': period, 'desc': desc, 'tags': tags, 'order': order})
+    return jsonify({'status': 'added', '_id': str(result.inserted_id)})
+
+@app.route('/api/admin/timeline/<item_id>', methods=['PUT'])
+@login_required
+def update_timeline(item_id):
+    if timeline_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    oid = safe_object_id(item_id)
+    if not oid:
+        return jsonify({'error': 'Invalid id'}), 400
+    data = request.json or {}
+    timeline_col.update_one({'_id': oid}, {'$set': {
+        'role':   sanitize(data.get('role')   or '', max_len=200),
+        'org':    sanitize(data.get('org')    or '', max_len=200),
+        'period': sanitize(data.get('period') or '', max_len=50),
+        'desc':   sanitize(data.get('desc')   or '', max_len=500),
+        'tags':   [sanitize(t, max_len=50) for t in data.get('tags', []) if t][:8],
+    }})
+    return jsonify({'status': 'updated'})
+
+@app.route('/api/admin/timeline/<item_id>', methods=['DELETE'])
+@login_required
+def delete_timeline(item_id):
+    if timeline_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    oid = safe_object_id(item_id)
+    if not oid:
+        return jsonify({'error': 'Invalid id'}), 400
+    timeline_col.delete_one({'_id': oid})
+    return jsonify({'status': 'deleted'})
+
+@app.route('/api/admin/timeline/reorder', methods=['POST'])
+@login_required
+def reorder_timeline():
+    if timeline_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    order = (request.json or {}).get('order', [])
+    for item in order:
+        oid = safe_object_id(item.get('id'))
+        if oid:
+            timeline_col.update_one({'_id': oid}, {'$set': {'order': item['order']}})
+    return jsonify({'status': 'reordered'})
+
+# ── AWARDS API ───────────────────────────────────────────────────────────────
+@app.route('/api/awards')
+def get_awards():
+    if awards_col is None:
+        return jsonify([]), 500
+    items = list(awards_col.find({}).sort('order', 1))
+    for i in items:
+        i['_id'] = str(i['_id'])
+    return jsonify(items)
+
+@app.route('/api/admin/awards', methods=['POST'])
+@login_required
+def add_award():
+    if awards_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    data  = request.json or {}
+    title = sanitize(data.get('title') or '', max_len=200)
+    org   = sanitize(data.get('org')   or '', max_len=200)
+    year  = sanitize(data.get('year')  or '', max_len=10)
+    desc  = sanitize(data.get('desc')  or '', max_len=500)
+    if not title:
+        return jsonify({'error': 'title required'}), 400
+    top   = awards_col.find_one(sort=[('order', -1)])
+    order = (top['order'] + 1) if top else 0
+    result = awards_col.insert_one({'title': title, 'org': org, 'year': year, 'desc': desc, 'order': order})
+    return jsonify({'status': 'added', '_id': str(result.inserted_id)})
+
+@app.route('/api/admin/awards/<award_id>', methods=['PUT'])
+@login_required
+def update_award(award_id):
+    if awards_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    oid = safe_object_id(award_id)
+    if not oid:
+        return jsonify({'error': 'Invalid id'}), 400
+    data = request.json or {}
+    awards_col.update_one({'_id': oid}, {'$set': {
+        'title': sanitize(data.get('title') or '', max_len=200),
+        'org':   sanitize(data.get('org')   or '', max_len=200),
+        'year':  sanitize(data.get('year')  or '', max_len=10),
+        'desc':  sanitize(data.get('desc')  or '', max_len=500),
+    }})
+    return jsonify({'status': 'updated'})
+
+@app.route('/api/admin/awards/<award_id>', methods=['DELETE'])
+@login_required
+def delete_award(award_id):
+    if awards_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    oid = safe_object_id(award_id)
+    if not oid:
+        return jsonify({'error': 'Invalid id'}), 400
+    awards_col.delete_one({'_id': oid})
+    return jsonify({'status': 'deleted'})
+
+# ── BLOGS API ─────────────────────────────────────────────────────────────────
+@app.route('/api/blogs')
+def get_blogs():
+    if blogs_col is None:
+        return jsonify([]), 500
+    items = list(blogs_col.find({}).sort('date', -1))
+    for i in items:
+        i['_id']  = str(i['_id'])
+        i['date'] = i['date'].strftime('%d %b %Y') if i.get('date') else ''
+    return jsonify(items)
+
+@app.route('/api/admin/blogs', methods=['POST'])
+@login_required
+def add_blog():
+    if blogs_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    data    = request.json or {}
+    title   = sanitize(data.get('title')   or '', max_len=200)
+    excerpt = sanitize(data.get('excerpt') or '', max_len=400)
+    body    = sanitize(data.get('body')    or '', max_len=5000)
+    thumb   = sanitize(data.get('thumb')   or '', max_len=300)
+    tags    = [sanitize(t, max_len=50) for t in data.get('tags', []) if t][:8]
+    if not title or not body:
+        return jsonify({'error': 'title and body required'}), 400
+    result = blogs_col.insert_one({
+        'title': title, 'excerpt': excerpt, 'body': body,
+        'thumb': thumb, 'tags': tags, 'date': datetime.now(timezone.utc)
+    })
+    return jsonify({'status': 'added', '_id': str(result.inserted_id)})
+
+@app.route('/api/admin/blogs/<blog_id>', methods=['PUT'])
+@login_required
+def update_blog(blog_id):
+    if blogs_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    oid = safe_object_id(blog_id)
+    if not oid:
+        return jsonify({'error': 'Invalid id'}), 400
+    data = request.json or {}
+    blogs_col.update_one({'_id': oid}, {'$set': {
+        'title':   sanitize(data.get('title')   or '', max_len=200),
+        'excerpt': sanitize(data.get('excerpt') or '', max_len=400),
+        'body':    sanitize(data.get('body')    or '', max_len=5000),
+        'thumb':   sanitize(data.get('thumb')   or '', max_len=300),
+        'tags':    [sanitize(t, max_len=50) for t in data.get('tags', []) if t][:8],
+    }})
+    return jsonify({'status': 'updated'})
+
+@app.route('/api/admin/blogs/<blog_id>', methods=['DELETE'])
+@login_required
+def delete_blog(blog_id):
+    if blogs_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    oid = safe_object_id(blog_id)
+    if not oid:
+        return jsonify({'error': 'Invalid id'}), 400
+    blogs_col.delete_one({'_id': oid})
+    return jsonify({'status': 'deleted'})
+
 # ── PUBLIC READ APIs ──────────────────────────────────────────────────────────
 @app.route('/api/about')
 def get_about():
@@ -618,6 +915,181 @@ def get_work():
         i['_id'] = str(i['_id'])
         i.setdefault('views', 0)
     return jsonify(items)
+
+# ── COMPANIES API ─────────────────────────────────────────────────────────────
+@app.route('/api/companies')
+def get_companies():
+    """Public endpoint to get all companies for footer display"""
+    if companies_col is None:
+        return jsonify([]), 500
+    companies = list(companies_col.find({}).sort('order', 1))
+    for c in companies:
+        c['_id'] = str(c['_id'])
+        if 'created_at' in c:
+            c['created_at'] = c['created_at'].isoformat() if c['created_at'] else None
+    return jsonify(companies)
+
+@app.route('/api/admin/companies', methods=['GET'])
+@login_required
+def admin_get_companies():
+    """Admin endpoint to get all companies"""
+    if companies_col is None:
+        return jsonify([]), 500
+    companies = list(companies_col.find({}).sort('order', 1))
+    for c in companies:
+        c['_id'] = str(c['_id'])
+        if 'created_at' in c:
+            c['created_at'] = c['created_at'].isoformat() if c['created_at'] else None
+    return jsonify(companies)
+
+@app.route('/api/admin/companies', methods=['POST'])
+@login_required
+def add_company():
+    """Add a new company"""
+    if companies_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    
+    data = request.json or {}
+    name = sanitize(data.get('name', ''), max_len=100)
+    img_url = sanitize(data.get('img_url', ''), max_len=500)
+    
+    if not name or not img_url:
+        return jsonify({'error': 'Both name and image URL are required'}), 400
+    
+    # Get the highest order value
+    last_company = companies_col.find_one(sort=[('order', -1)])
+    order = (last_company.get('order', -1) + 1) if last_company else 0
+    
+    result = companies_col.insert_one({
+        'name': name,
+        'img_url': img_url,
+        'order': order,
+        'created_at': datetime.now(timezone.utc)
+    })
+    
+    return jsonify({
+        'status': 'added',
+        '_id': str(result.inserted_id),
+        'name': name,
+        'img_url': img_url,
+        'order': order
+    })
+
+@app.route('/api/admin/companies/<company_id>', methods=['PUT'])
+@login_required
+def update_company(company_id):
+    """Update a company"""
+    if companies_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    
+    oid = safe_object_id(company_id)
+    if not oid:
+        return jsonify({'error': 'Invalid id'}), 400
+    
+    data = request.json or {}
+    name = sanitize(data.get('name', ''), max_len=100)
+    img_url = sanitize(data.get('img_url', ''), max_len=500)
+    
+    if not name and not img_url:
+        return jsonify({'error': 'Nothing to update'}), 400
+    
+    update_data = {}
+    if name:
+        update_data['name'] = name
+    if img_url:
+        update_data['img_url'] = img_url
+    
+    companies_col.update_one({'_id': oid}, {'$set': update_data})
+    return jsonify({'status': 'updated'})
+
+@app.route('/api/admin/companies/<company_id>', methods=['DELETE'])
+@login_required
+def delete_company(company_id):
+    """Delete a company"""
+    if companies_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    
+    oid = safe_object_id(company_id)
+    if not oid:
+        return jsonify({'error': 'Invalid id'}), 400
+    
+    companies_col.delete_one({'_id': oid})
+    return jsonify({'status': 'deleted'})
+
+@app.route('/api/admin/companies/reorder', methods=['POST'])
+@login_required
+def reorder_companies():
+    if companies_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    order_data = (request.json or {}).get('order', [])
+    for item in order_data:
+        oid = safe_object_id(item.get('id'))
+        if oid:
+            companies_col.update_one({'_id': oid}, {'$set': {'order': item.get('order', 0)}})
+    return jsonify({'status': 'reordered'})
+
+# ── STILLS API ────────────────────────────────────────────────────────────────
+@app.route('/api/stills')
+def get_stills():
+    if stills_col is None:
+        return jsonify([]), 500
+    items = list(stills_col.find({}).sort('order', 1))
+    for i in items:
+        i['_id'] = str(i['_id'])
+    return jsonify(items)
+
+@app.route('/api/admin/stills', methods=['POST'])
+@login_required
+def add_still():
+    if stills_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    data    = request.json or {}
+    url     = sanitize(data.get('url') or '', max_len=500)
+    caption = sanitize(data.get('caption') or '', max_len=200)
+    if not url:
+        return jsonify({'error': 'url required'}), 400
+    top   = stills_col.find_one(sort=[('order', -1)])
+    order = (top['order'] + 1) if top else 0
+    result = stills_col.insert_one({'url': url, 'caption': caption, 'order': order})
+    return jsonify({'status': 'added', '_id': str(result.inserted_id)})
+
+@app.route('/api/admin/stills/<still_id>', methods=['PUT'])
+@login_required
+def update_still(still_id):
+    if stills_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    oid = safe_object_id(still_id)
+    if not oid:
+        return jsonify({'error': 'Invalid id'}), 400
+    data = request.json or {}
+    stills_col.update_one({'_id': oid}, {'$set': {
+        'url':     sanitize(data.get('url') or '', max_len=500),
+        'caption': sanitize(data.get('caption') or '', max_len=200),
+    }})
+    return jsonify({'status': 'updated'})
+
+@app.route('/api/admin/stills/<still_id>', methods=['DELETE'])
+@login_required
+def delete_still(still_id):
+    if stills_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    oid = safe_object_id(still_id)
+    if not oid:
+        return jsonify({'error': 'Invalid id'}), 400
+    stills_col.delete_one({'_id': oid})
+    return jsonify({'status': 'deleted'})
+
+@app.route('/api/admin/stills/reorder', methods=['POST'])
+@login_required
+def reorder_stills():
+    if stills_col is None:
+        return jsonify({'error': 'DB unavailable'}), 500
+    order = (request.json or {}).get('order', [])
+    for item in order:
+        oid = safe_object_id(item.get('id'))
+        if oid:
+            stills_col.update_one({'_id': oid}, {'$set': {'order': item['order']}})
+    return jsonify({'status': 'reordered'})
 
 # ── RUN ───────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':

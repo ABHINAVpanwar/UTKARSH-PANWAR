@@ -1,26 +1,50 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Utkarsh Panwar</title>
-    <meta name="description" content="Utkarsh Panwar — FX TD at DNEG. VFX Artist specializing in Houdini, Nuke, Maya. Pyro, destruction, fluid simulations for film and TV." />
-    <meta name="keywords" content="Utkarsh Panwar, VFX Artist, FX TD, DNEG, Houdini, Nuke, Maya, Visual Effects, Pyro, RBD, FLIP" />
+    <meta
+      name="description"
+      content="Utkarsh Panwar — FX TD at DNEG. VFX Artist specializing in Houdini, Nuke, Maya. Pyro, destruction, fluid simulations for film and TV."
+    />
+    <meta
+      name="keywords"
+      content="Utkarsh Panwar, VFX Artist, FX TD, DNEG, Houdini, Nuke, Maya, Visual Effects, Pyro, RBD, FLIP"
+    />
     <meta property="og:title" content="Utkarsh Panwar - VFX Artist" />
-    <meta property="og:description" content="FX TD at DNEG — cinematic visual effects through Houdini, Nuke & beyond." />
-    <meta property="og:image" content="{{ url_for('static', filename='IMAGE/profile.jpg', _external=True) }}" />
+    <meta
+      property="og:description"
+      content="FX TD at DNEG — cinematic visual effects through Houdini, Nuke & beyond."
+    />
+    <meta
+      property="og:image"
+      content="{{ url_for('static', filename='IMAGE/profile.jpg', _external=True) }}"
+    />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="icon" href="{{ url_for('static', filename='IMAGE/logo.jpg') }}" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='IMAGE/logo.jpg') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Space+Grotesk:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='index.css') }}"
+    />
   </head>
   <body>
-
     <!-- PRELOADER -->
     <div id="preloader">
       <canvas id="preloader-canvas"></canvas>
+      <div id="preloader-pct">0%</div>
       <div id="thq-animation">
         <span class="letter" id="letter1">U</span>
         <span class="letter" id="letter2">T</span>
@@ -37,7 +61,11 @@
     <!-- HEADER -->
     <header id="header">
       <nav>
-        <a id="logo" href="/"><img src="{{ url_for('static', filename='IMAGE/logo.jpg') }}" alt="UTK" /></a>
+        <a id="logo" href="/"
+          ><img
+            src="{{ url_for('static', filename='IMAGE/logo.jpg') }}"
+            alt="UTK"
+        /></a>
         <ul id="nav-bar">
           <li><a href="#S1" class="nav-link">SHOWREEL</a></li>
           <li><a href="#S2" class="nav-link">ABOUT</a></li>
@@ -53,19 +81,31 @@
     <section id="S1">
       <div id="videoContainer">
         <video autoplay muted loop id="myVideo" playsinline>
-          <source src="{{ url_for('static', filename='VIDEO/BGD2.mp4') }}" type="video/mp4" />
+          <source
+            src="{{ url_for('static', filename='VIDEO/BGD.mp4') }}"
+            type="video/mp4"
+          />
         </video>
         <div id="video-overlay"></div>
       </div>
       <canvas id="particle-canvas"></canvas>
       <div id="hero-content">
-        <div id="available-badge" class="hidden"><span class="dot"></span><span id="available-text">AVAILABLE FOR WORK</span></div>
+        <div id="available-badge" class="hidden">
+          <span class="dot"></span
+          ><span id="available-text">AVAILABLE FOR WORK</span>
+        </div>
         <div id="hero-tag">{{ about.get('hero_tag', 'FX TD @ DNEG') }}</div>
-        <h1 id="T1">UTKARSH<br><span>PANWAR</span></h1>
-        <p id="T2">{{ about.get('hero_desc', 'Versatile Visual Effects Artist — transforming imagination into cinematic reality through Houdini, Nuke & beyond.') }}</p>
+        <h1 id="T1">UTKARSH<br /><span>PANWAR</span></h1>
+        <p id="T2">
+          {{ about.get('hero_desc', 'Versatile Visual Effects Artist —
+          transforming imagination into cinematic reality through Houdini, Nuke
+          & beyond.') }}
+        </p>
         <div id="hero-actions">
           <button id="B1" class="btn-primary">
-            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+            <svg viewBox="0 0 24 24" width="18" height="18">
+              <path d="M8 5v14l11-7z" fill="currentColor" />
+            </svg>
             <span>PLAY SHOWREEL</span>
           </button>
           <a href="#S2" class="btn-ghost">EXPLORE WORK</a>
@@ -84,12 +124,19 @@
             <div id="profile-glow"></div>
           </div>
           <div id="about-text">
-            <div id="about-name">Utkarsh Panwar</div>
+            <div id="about-name">{{ about.get('name', 'Utkarsh Panwar') }}</div>
             <div id="about-role">{{ about.get('role', 'FX TD · DNEG') }}</div>
+          </div>
+          <div id="accent-picker">
+            <div class="accent-label">THEME COLOR</div>
+            <canvas id="picker-canvas" width="160" height="120"></canvas>
+            <canvas id="hue-strip" width="160" height="14"></canvas>
           </div>
         </div>
         <div id="about-right">
-          <h2 class="section-heading reveal">Crafting Visual <em>Wonders</em></h2>
+          <h2 class="section-heading reveal" id="about-heading">
+            Crafting Visual <em>Wonders</em>
+          </h2>
           <div id="about-cards">
             {% for card in about.get('cards', []) %}
             <div class="about-card reveal">
@@ -117,47 +164,13 @@
       <div class="section-label reveal">WORK</div>
       <h2 class="section-heading reveal">Personal <em>Projects</em></h2>
       <div id="tag-filter"></div>
-      <div id="work-grid">
-        {% for w in work %}
-        <div class="work-card reveal" data-vimeo="{{ w.vimeo }}">
-          <div class="wc-media">
-            <img src="{% if w.thumb.startswith('http') %}{{ w.thumb }}{% else %}{{ url_for('static', filename=w.thumb) }}{% endif %}" class="wc-thumb" alt="{{ w.title }}" />
-            <div class="wc-play">
-              <button class="wc-play-btn" aria-label="Play">
-                <svg viewBox="0 0 24 24" width="32" height="32"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
-              </button>
-            </div>
-            <button class="wc-close" aria-label="Close video"><i class="fas fa-times"></i></button>
-          </div>
-          <div class="wc-info">
-            <div class="wc-num">{{ w.num }}</div>
-            <h3 class="wc-title">{{ w.title }}</h3>
-            <p class="wc-desc">{{ w.desc }}</p>
-            <div class="wc-tags">
-              {% for tag in w.get('tags', []) %}<span>{{ tag }}</span>{% endfor %}
-            </div>
-            {% if w.link %}
-            <a href="{{ w.link }}" target="_blank" rel="noopener noreferrer" class="wc-link">
-              View on ArtStation <i class="fas fa-arrow-up-right-from-square"></i>
-            </a>
-            {% endif %}
-          </div>
-        </div>
-        {% endfor %}
-      </div>
+      <div id="work-grid"></div>
 
       <!-- STILLS GALLERY -->
       <div id="S6">
         <div class="section-label reveal">STILLS</div>
         <h2 class="section-heading reveal">Visual <em>Stills</em></h2>
-        <div id="stills-grid">
-          {% for i in range(1, 9) %}
-          <div class="still-item reveal" data-index="{{ i - 1 }}">
-            <img src="{{ url_for('static', filename='PORTFOLIO/IMG (' ~ i ~ ').jpg') }}" alt="Still {{ i }}" loading="lazy" />
-            <div class="still-overlay"><i class="fas fa-expand"></i></div>
-          </div>
-          {% endfor %}
-        </div>
+        <div id="stills-grid"></div>
       </div>
 
       <!-- LIGHTBOX -->
@@ -173,21 +186,97 @@
     <section id="S4">
       <div class="section-label reveal">PORTFOLIO</div>
       <h2 class="section-heading reveal">Featured <em>Credits</em></h2>
-      {% for cat in credits %}
-      <div class="port-category reveal">
-        <div class="port-cat-label">{{ cat.category }}</div>
-        <div class="port-scroll">
-          {% for v in cat.get('videos', []) %}
-          <div class="video-item">
-            <div class="video-wrapper">
-              <iframe src="{{ v.embed }}" frameborder="0" allowfullscreen loading="lazy"></iframe>
-            </div>
-            <div class="video-caption">{{ v.caption }}</div>
+    </section>
+
+    <!-- CAREER TIMELINE -->
+    <section id="S_timeline">
+      <div class="section-label reveal">JOURNEY</div>
+      <h2 class="section-heading reveal">Career <em>Timeline</em></h2>
+      <div id="timeline-wrap"></div>
+    </section>
+
+    <!-- AWARDS & RECOGNITION -->
+    <section id="S_awards">
+      <div class="section-label reveal">RECOGNITION</div>
+      <h2 class="section-heading reveal">Awards &amp; <em>Achievements</em></h2>
+      <div id="awards-grid"></div>
+    </section>
+
+    <!-- BLOG / BEHIND THE SCENES -->
+    <section id="S_blog">
+      <div class="section-label reveal">BEHIND THE SCENES</div>
+      <h2 class="section-heading reveal">Blog &amp; <em>Breakdowns</em></h2>
+      <div id="blog-grid"></div>
+    </section>
+
+    <!-- BLOG MODAL -->
+    <div id="blog-modal">
+      <div id="blog-modal-inner">
+        <button id="blog-modal-close"><i class="fas fa-times"></i></button>
+        <img id="blog-modal-thumb" src="" alt="" style="display: none" />
+        <div id="blog-modal-date"></div>
+        <div id="blog-modal-title"></div>
+        <div id="blog-modal-tags"></div>
+        <div id="blog-modal-body"></div>
+      </div>
+    </div>
+
+    <!-- LOCATION & WEATHER -->
+    <section id="S_location">
+      <div class="section-label reveal">LOCATION</div>
+      <h2 class="section-heading reveal">Currently <em>Based In</em></h2>
+      <div id="location-card" class="reveal">
+        <div id="loc-left">
+          <div id="loc-city-name"></div>
+          <div id="loc-timezone"></div>
+        </div>
+        <div id="loc-divider"></div>
+        <div id="loc-right">
+          <div id="loc-weather-main">
+            <span id="loc-weather-icon"></span>
+            <span id="loc-temp"></span>
           </div>
-          {% endfor %}
+          <div id="loc-weather-details">
+            <div class="loc-detail">
+              <i class="fas fa-wind"></i><span id="loc-wind"></span>
+            </div>
+            <div class="loc-detail">
+              <i class="fas fa-droplet"></i><span id="loc-humidity"></span>
+            </div>
+          </div>
         </div>
       </div>
-      {% endfor %}
+    </section>
+
+    <!-- COMPANIES WORKED WITH SECTION (FOOTER) -->
+    <section id="S_companies">
+      <div class="section-label reveal">COMPANIES</div>
+      <h2 class="section-heading reveal">
+        Trusted By <em>Industry Leaders</em>
+      </h2>
+      <div id="companies-wrap" class="reveal">
+        <div id="companies-container">
+          {% if companies %} {% for company in companies %}
+          <div class="company-item">
+            <img
+              src="{{ company.img_url }}"
+              alt="{{ company.name }}"
+              class="company-logo"
+              loading="lazy"
+              onerror="
+                this.src =
+                  'https://via.placeholder.com/120x60?text=Logo+Not+Found'
+              "
+            />
+            <div class="company-name">{{ company.name }}</div>
+          </div>
+          {% endfor %} {% else %}
+          <div class="companies-placeholder">
+            <p>Companies worked with will appear here</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
     </section>
 
     <!-- CONTACT -->
@@ -197,62 +286,215 @@
       <div id="contact-grid">
         <div id="contact-left" class="reveal">
           <div id="exp-block">
-            <div id="exp-num" data-target="{{ about.get('exp_hours', 7000) }}"></div>
+            <div
+              id="exp-num"
+              data-target="{{ about.get('exp_hours', 7000) }}"
+            ></div>
             <div id="exp-label">Hours of Experience</div>
           </div>
           <div id="contact-info">
-            <a href="mailto:utkarshpanwar01@gmail.com" class="contact-line">
-              <i class="fas fa-envelope"></i> utkarshpanwar01@gmail.com
+            <a href="mailto:utkarshpanwar01@gmail.com" class="contact-line" id="contact-email">
+              <i class="fas fa-envelope"></i><span>utkarshpanwar01@gmail.com</span>
             </a>
-            <a href="tel:+918810669600" class="contact-line">
-              <i class="fas fa-phone"></i> +91 8810669600
+            <a href="tel:+918810669600" class="contact-line" id="contact-phone">
+              <i class="fas fa-phone"></i><span>+91 8810669600</span>
             </a>
           </div>
           <div id="social-links">
-            <a href="https://www.linkedin.com/in/utkarsh-panwar/" target="_blank" rel="noopener noreferrer" id="one"><i class="fa-brands fa-linkedin"></i></a>
-            <a href="https://vimeo.com/user146712461" target="_blank" rel="noopener noreferrer" id="two"><i class="fa-brands fa-vimeo"></i></a>
-            <a href="{{ url_for('static', filename='FILE/Resume.pdf') }}" target="_blank" rel="noopener noreferrer" id="three"><i class="fa-regular fa-file"></i></a>
-            <a href="https://www.artstation.com/utkarshpanwar11" target="_blank" rel="noopener noreferrer" id="four"><i class="fa-brands fa-artstation"></i></a>
-            <a href="https://www.instagram.com/utkarshpanwar11/" target="_blank" rel="noopener noreferrer" id="five"><i class="fa-brands fa-instagram"></i></a>
+            <a
+              href="https://www.linkedin.com/in/utkarsh-panwar/"
+              target="_blank"
+              rel="noopener noreferrer"
+              id="one"
+              ><i class="fa-brands fa-linkedin"></i
+            ></a>
+            <a
+              href="https://vimeo.com/user146712461"
+              target="_blank"
+              rel="noopener noreferrer"
+              id="two"
+              ><i class="fa-brands fa-vimeo"></i
+            ></a>
+            <a
+              href="{{ about.get('social_links', {}).get('resume', '#') }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              id="three"
+              ><i class="fa-regular fa-file"></i
+            ></a>
+            <a
+              href="https://www.artstation.com/utkarshpanwar11"
+              target="_blank"
+              rel="noopener noreferrer"
+              id="four"
+              ><i class="fa-brands fa-artstation"></i
+            ></a>
+            <a
+              href="https://www.instagram.com/utkarshpanwar11/"
+              target="_blank"
+              rel="noopener noreferrer"
+              id="five"
+              ><i class="fa-brands fa-instagram"></i
+            ></a>
           </div>
         </div>
         <div id="contact-right" class="reveal">
-          <form id="form" action="https://api.web3forms.com/submit" method="POST">
-            <input type="hidden" name="access_key" value="4d6d075d-2a50-465e-acb1-6e59d6039eb6" />
-            <div class="form-group"><input type="text" name="name" placeholder="Your Name" required /></div>
-            <div class="form-group"><input type="email" name="email" placeholder="Your Email" required /></div>
-            <div class="form-group"><textarea name="message" placeholder="Your Message" required rows="5"></textarea></div>
+          <form
+            id="form"
+            action="https://api.web3forms.com/submit"
+            method="POST"
+          >
+            <input
+              type="hidden"
+              name="access_key"
+              id="web3forms-key"
+              value=""
+            />
+            <div class="form-group">
+              <input type="text" name="name" placeholder="Your Name" required />
+            </div>
+            <div class="form-group">
+              <input
+                type="email"
+                name="email"
+                placeholder="Your Email"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <textarea
+                name="message"
+                placeholder="Your Message"
+                required
+                rows="5"
+              ></textarea>
+            </div>
             <button type="submit" class="btn-primary">SEND MESSAGE</button>
           </form>
         </div>
       </div>
-      <div id="footer-credit">Developed by <a href="https://abhinavpanwar.netlify.app" target="_blank" rel="noopener noreferrer">Abhinav Panwar</a></div>
+      
+      <div style="text-align: center; margin: 40px 0 30px">
+        <div
+          style="
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(232, 98, 42, 0.1);
+            padding: 10px 25px;
+            border-radius: 100px;
+            border: 1px solid rgba(232, 98, 42, 0.3);
+          "
+        >
+          <div style="display: flex; align-items: center; gap: 8px">
+            <i class="fas fa-star" style="color: #ffc107; font-size: 18px"></i>
+            <span
+              style="font-weight: 700; font-size: 18px; color: var(--text)"
+              id="rating-value"
+              >0.0</span
+            >
+            <span style="color: #888"
+              >(<span id="rating-count">0</span> ratings)</span
+            >
+          </div>
+          <button
+            id="rate-us-btn"
+            style="
+              background: #e8622a;
+              border: none;
+              color: white;
+              padding: 5px 15px;
+              border-radius: 50px;
+              cursor: pointer;
+              font-weight: 600;
+              transition: all 0.3s;
+            "
+          >
+            <i class="fas fa-pen"></i> Rate This Site
+          </button>
+        </div>
+      </div>
+
+      <div id="footer-credit">
+        Developed by
+        <a
+          href="https://abhinavpanwar.netlify.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Abhinav Panwar</a
+        >
+      </div>
     </section>
 
     <!-- BACK TO TOP -->
-    <button id="back-to-top" aria-label="Back to top"><i class="fas fa-chevron-up"></i></button>
+    <button id="back-to-top" aria-label="Back to top">
+      <i class="fas fa-chevron-up"></i>
+    </button>
 
     <!-- VISITOR NAME PROMPT -->
-    <div id="visitor-toast" style="
-      position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(120px);
-      background:#111;border:1px solid rgba(232,98,42,0.4);border-radius:12px;
-      padding:1.1rem 1.4rem;z-index:9999;min-width:280px;max-width:340px;
-      box-shadow:0 8px 32px rgba(0,0,0,0.5);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
-      font-family:'Inter',sans-serif;">
-      <p style="font-size:0.85rem;color:#ccc;margin-bottom:0.75rem;line-height:1.5;">
-        👋 Hey! Want to leave your name so we know who visited?
+    <style>
+      #visitor-toast {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%) translateY(120px);
+        background: #111;
+        border: 1px solid rgba(232, 98, 42, 0.4);
+        border-radius: 12px;
+        padding: 1.1rem 1.4rem;
+        z-index: 9999;
+        width: calc(100vw - 2rem);
+        max-width: 340px;
+        box-sizing: border-box;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+    <div id="visitor-toast">
+      <p
+        style="
+          font-size: 0.85rem;
+          color: #ccc;
+          margin-bottom: 0.75rem;
+          line-height: 1.5;
+        "
+      >
+        👋 Hey! Please enter your name so we know who visited.
       </p>
-      <div style="display:flex;gap:0.5rem;">
-        <input id="visitor-name-input" type="text" placeholder="Your name" maxlength="60"
-          style="flex:1;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:6px;
-                 color:#fff;padding:0.5rem 0.75rem;font-size:0.85rem;outline:none;"
-          onkeydown="if(event.key==='Enter')saveVisitorName()" />
-        <button onclick="saveVisitorName()"
-          style="background:#e8622a;border:none;border-radius:6px;color:#fff;
-                 padding:0.5rem 0.9rem;font-size:0.8rem;font-weight:600;cursor:pointer;">Save</button>
-        <button onclick="dismissVisitorToast()"
-          style="background:transparent;border:1px solid #333;border-radius:6px;color:#666;
-                 padding:0.5rem 0.7rem;font-size:0.8rem;cursor:pointer;">✕</button>
+      <div style="display: flex; gap: 0.5rem">
+        <input
+          id="visitor-name-input"
+          type="text"
+          placeholder="Your name"
+          maxlength="60"
+          style="
+            flex: 1;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
+            color: #fff;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.85rem;
+            outline: none;
+          "
+          onkeydown="if (event.key === 'Enter') saveVisitorName();"
+        />
+        <button
+          onclick="saveVisitorName()"
+          style="
+            background: #e8622a;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            padding: 0.5rem 0.9rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+          "
+        >
+          Save
+        </button>
       </div>
     </div>
 
@@ -260,127 +502,536 @@
     <div id="showreel-modal">
       <div id="showreel-modal-inner">
         <div id="showreel-wrap">
-          <iframe id="myVideo2" src="" data-src="https://player.vimeo.com/video/836954122?h=351a362af3&autoplay=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          <iframe
+            id="myVideo2"
+            src=""
+            data-src="https://player.vimeo.com/video/836954122?h=351a362af3&autoplay=1&title=0&byline=0&portrait=0"
+            frameborder="0"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowfullscreen
+          ></iframe>
         </div>
       </div>
     </div>
 
+    <!-- RATING MODAL -->
+    <div id="rating-modal" class="modal">
+      <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <h3 style="margin-bottom: 20px; color: var(--text)">Rate Our Work</h3>
+
+        <!-- Star Rating Input -->
+        <div style="text-align: center; margin-bottom: 25px">
+          <div
+            id="star-rating"
+            style="
+              display: flex;
+              gap: 10px;
+              justify-content: center;
+              font-size: 40px;
+              cursor: pointer;
+            "
+          >
+            <i class="far fa-star" data-value="1"></i>
+            <i class="far fa-star" data-value="2"></i>
+            <i class="far fa-star" data-value="3"></i>
+            <i class="far fa-star" data-value="4"></i>
+            <i class="far fa-star" data-value="5"></i>
+          </div>
+          <input type="hidden" id="selected-rating" value="0" />
+          <p
+            id="rating-error"
+            style="
+              color: #f87171;
+              font-size: 12px;
+              margin-top: 10px;
+              display: none;
+            "
+          >
+            Please select a rating
+          </p>
+        </div>
+
+        <!-- Name Input -->
+        <div class="form-group" style="margin-bottom: 15px">
+          <input
+            type="text"
+            id="reviewer-name"
+            placeholder="Your name (optional)"
+            maxlength="100"
+            style="
+              width: 100%;
+              background: var(--input-bg);
+              border: 1px solid var(--input-border);
+              border-radius: 8px;
+              padding: 10px;
+              color: var(--input-color);
+            "
+          />
+        </div>
+
+        <!-- Comment Input -->
+        <div class="form-group" style="margin-bottom: 20px">
+          <textarea
+            id="review-comment"
+            placeholder="Your feedback (optional)"
+            rows="3"
+            maxlength="500"
+            style="
+              width: 100%;
+              background: var(--input-bg);
+              border: 1px solid var(--input-border);
+              border-radius: 8px;
+              padding: 10px;
+              color: var(--input-color);
+              resize: vertical;
+            "
+          ></textarea>
+        </div>
+
+        <button id="submit-rating" class="btn-primary" style="width: 100%">
+          Submit Rating
+        </button>
+      </div>
+    </div>
+
+    <!-- RATING SUCCESS TOAST -->
+    <div
+      id="rating-toast"
+      style="
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #4ade80;
+        color: #000;
+        padding: 12px 20px;
+        border-radius: 8px;
+        z-index: 10000;
+        display: none;
+        animation: slideIn 0.3s ease;
+      "
+    >
+      Thank you for rating!
+    </div>
+
     <script src="{{ url_for('static', filename='index.js') }}"></script>
     <script>
-    // ── BACK TO TOP ────────────────────────────────────────────────────────────
-    const btt = document.getElementById('back-to-top');
-    window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 400));
-    btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-    // ── CONTACT FORM → MONGODB ────────────────────────────────────────────────
-    document.getElementById('form').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const btn = this.querySelector('button[type=submit]');
-      const name    = this.querySelector('[name=name]').value.trim();
-      const email   = this.querySelector('[name=email]').value.trim();
-      const message = this.querySelector('[name=message]').value.trim();
-      btn.textContent = 'SENDING...';
-      btn.disabled = true;
-      try {
-        const r = await fetch('/api/contact', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, message })
-        }).then(r => r.json());
-        if (r.status === 'sent') {
-          btn.textContent = 'SENT!';
-          this.reset();
-          setTimeout(() => { btn.textContent = 'SEND MESSAGE'; btn.disabled = false; }, 3000);
-        } else {
-          btn.textContent = 'ERROR — TRY AGAIN';
-          btn.disabled = false;
+      async function syncTimeline() {
+        try {
+          const items = await fetch("/api/timeline").then((r) => r.json());
+          const wrap = document.getElementById("timeline-wrap");
+          if (!items.length) {
+            document.getElementById("S_timeline").style.display = "none";
+            return;
+          }
+          wrap.innerHTML = items
+            .map(
+              (t) => `
+          <div class="tl-item reveal">
+            <div class="tl-dot"></div>
+            <div class="tl-card">
+              ${t.period ? `<div class="tl-period">${t.period}</div>` : ""}
+              <div class="tl-role">${t.role}</div>
+              <div class="tl-org"><i class="fas fa-building" style="color:var(--accent);margin-right:0.6rem;font-size:1.1rem;"></i>${t.org}</div>
+              ${t.desc ? `<div class="tl-desc">${t.desc}</div>` : ""}
+              ${t.tags?.length ? `<div class="tl-tags">${t.tags.map((g) => `<span>${g}</span>`).join("")}</div>` : ""}
+            </div>
+          </div>`,
+            )
+            .join("");
+          wrap.querySelectorAll(".reveal").forEach((el, i) => {
+            el.style.transitionDelay = i * 0.15 + "s";
+            if (typeof revealObserver !== "undefined")
+              revealObserver.observe(el);
+          });
+        } catch (e) {
+          document.getElementById("S_timeline").style.display = "none";
         }
-      } catch { btn.textContent = 'ERROR — TRY AGAIN'; btn.disabled = false; }
-    });
+      }
 
-    const STATIC = '{{ url_for("static", filename="") }}';
+      async function syncAwards() {
+        try {
+          const items = await fetch("/api/awards").then((r) => r.json());
+          const grid = document.getElementById("awards-grid");
+          if (!items.length) {
+            document.getElementById("S_awards").style.display = "none";
+            return;
+          }
+          grid.innerHTML = items
+            .map(
+              (a) => `
+          <div class="award-card reveal">
+            <div class="award-icon"><i class="fas fa-trophy"></i></div>
+            <div class="award-title">${a.title}</div>
+            <div class="award-meta">
+              ${a.org ? `<span class="award-org">${a.org}</span>` : ""}
+              ${a.year ? `<span class="award-year">${a.year}</span>` : ""}
+            </div>
+            ${a.desc ? `<div class="award-desc">${a.desc}</div>` : ""}
+          </div>`,
+            )
+            .join("");
+          grid.querySelectorAll(".reveal").forEach((el, i) => {
+            el.style.transitionDelay = (i % 4) * 0.1 + "s";
+            if (typeof revealObserver !== "undefined")
+              revealObserver.observe(el);
+          });
+        } catch (e) {
+          document.getElementById("S_awards").style.display = "none";
+        }
+      }
 
-    async function syncAbout() {
-      try {
-        const d = await fetch('/api/about').then(r => r.json());
-        if (d.hero_tag)  document.getElementById('hero-tag').textContent = d.hero_tag;
-        if (d.hero_desc) document.getElementById('T2').textContent = d.hero_desc;
-        if (d.role)      document.getElementById('about-role').textContent = d.role;
-        if (d.exp_hours) document.getElementById('exp-num').dataset.target = d.exp_hours;
-        const badge = document.getElementById('available-badge');
-        if (d.available) badge.classList.remove('hidden');
-        else badge.classList.add('hidden');
-        if (d.cards && d.cards.length) {
-          const wrap = document.getElementById('about-cards');
-          wrap.innerHTML = d.cards.map(c => `
+      async function syncBlogs() {
+        try {
+          const items = await fetch("/api/blogs").then((r) => r.json());
+          const grid = document.getElementById("blog-grid");
+          if (!items.length) {
+            document.getElementById("S_blog").style.display = "none";
+            return;
+          }
+          grid.innerHTML = items
+            .map(
+              (b) => `
+          <div class="blog-card reveal" onclick="openBlog(${JSON.stringify(b).replace(/"/g, "&quot;")})">
+            ${
+              b.thumb
+                ? `<img class="blog-thumb" src="${b.thumb}" alt="${b.title}" loading="lazy" />`
+                : `<div class="blog-thumb-placeholder"><i class="fas fa-film"></i></div>`
+            }
+            <div class="blog-body">
+              <div class="blog-date">${b.date}</div>
+              <div class="blog-title">${b.title}</div>
+              ${b.excerpt ? `<div class="blog-excerpt">${b.excerpt}</div>` : ""}
+              <div class="blog-tags">${(b.tags || []).map((t) => `<span>${t}</span>`).join("")}</div>
+            </div>
+          </div>`,
+            )
+            .join("");
+          grid.querySelectorAll(".reveal").forEach((el, i) => {
+            el.style.transitionDelay = (i % 3) * 0.12 + "s";
+            if (typeof revealObserver !== "undefined")
+              revealObserver.observe(el);
+          });
+        } catch (e) {
+          document.getElementById("S_blog").style.display = "none";
+        }
+      }
+
+      function openBlog(b) {
+        const modal = document.getElementById("blog-modal");
+        const thumb = document.getElementById("blog-modal-thumb");
+        if (b.thumb) {
+          thumb.src = b.thumb;
+          thumb.style.display = "block";
+        } else {
+          thumb.style.display = "none";
+        }
+        document.getElementById("blog-modal-date").textContent = b.date;
+        document.getElementById("blog-modal-title").textContent = b.title;
+        document.getElementById("blog-modal-body").textContent = b.body;
+        document.getElementById("blog-modal-tags").innerHTML = (b.tags || [])
+          .map((t) => `<span class="blog-tags"><span>${t}</span></span>`)
+          .join("");
+        modal.classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+
+      document
+        .getElementById("blog-modal-close")
+        .addEventListener("click", () => {
+          document.getElementById("blog-modal").classList.remove("open");
+          document.body.style.overflow = "";
+        });
+      document.getElementById("blog-modal").addEventListener("click", (e) => {
+        if (e.target === document.getElementById("blog-modal")) {
+          document.getElementById("blog-modal").classList.remove("open");
+          document.body.style.overflow = "";
+        }
+      });
+
+      async function syncLocation() {
+        try {
+          const loc = await fetch("/api/weather").then((r) => r.json());
+          if (loc.error) {
+            document.getElementById("S_location").style.display = "none";
+            return;
+          }
+          const w = await fetch(
+            `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}` +
+              `&current=temperature_2m,weathercode,windspeed_10m,relativehumidity_2m` +
+              `&temperature_unit=celsius&windspeed_unit=kmh&timezone=auto`,
+          ).then((r) => r.json());
+          const icons = {
+            0: "☀️",
+            1: "🌤️",
+            2: "⛅",
+            3: "☁️",
+            45: "🌫️",
+            48: "🌫️",
+            51: "🌦️",
+            53: "🌦️",
+            55: "🌧️",
+            61: "🌧️",
+            63: "🌧️",
+            65: "🌧️",
+            71: "🌨️",
+            73: "🌨️",
+            75: "❄️",
+            80: "🌦️",
+            81: "🌧️",
+            82: "⛈️",
+            95: "⛈️",
+            96: "⛈️",
+            99: "⛈️",
+          };
+          const descs = {
+            0: "Clear Sky",
+            1: "Mainly Clear",
+            2: "Partly Cloudy",
+            3: "Overcast",
+            45: "Foggy",
+            48: "Foggy",
+            51: "Light Drizzle",
+            53: "Drizzle",
+            55: "Heavy Drizzle",
+            61: "Light Rain",
+            63: "Rain",
+            65: "Heavy Rain",
+            71: "Light Snow",
+            73: "Snow",
+            75: "Heavy Snow",
+            80: "Showers",
+            81: "Heavy Showers",
+            82: "Violent Showers",
+            95: "Thunderstorm",
+            96: "Thunderstorm",
+            99: "Thunderstorm",
+          };
+          const cur = w.current;
+          const code = cur.weathercode;
+          document.getElementById("loc-city-name").textContent = loc.city;
+          document.getElementById("loc-timezone").textContent =
+            w.timezone.replace("_", " ");
+          document.getElementById("loc-weather-icon").textContent =
+            icons[code] ?? "🌡️";
+          document.getElementById("loc-temp").textContent =
+            `${Math.round(cur.temperature_2m)}°C  ${descs[code] ?? ""}`;
+          document.getElementById("loc-wind").textContent =
+            `${cur.windspeed_10m} km/h`;
+          document.getElementById("loc-humidity").textContent =
+            `${cur.relativehumidity_2m}%`;
+        } catch (e) {
+          document.getElementById("S_location").style.display = "none";
+        }
+      }
+
+      // ── BACK TO TOP ────────────────────────────────────────────────────────────
+      const btt = document.getElementById("back-to-top");
+      window.addEventListener("scroll", () =>
+        btt.classList.toggle("visible", window.scrollY > 400),
+      );
+      btt.addEventListener("click", () =>
+        window.scrollTo({ top: 0, behavior: "smooth" }),
+      );
+
+      // ── CONTACT FORM → MONGODB ────────────────────────────────────────────────
+      document
+        .getElementById("form")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const btn = this.querySelector("button[type=submit]");
+          const name = this.querySelector("[name=name]").value.trim();
+          const email = this.querySelector("[name=email]").value.trim();
+          const message = this.querySelector("[name=message]").value.trim();
+          btn.textContent = "SENDING...";
+          btn.disabled = true;
+          try {
+            const r = await fetch("/api/contact", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ name, email, message }),
+            }).then((r) => r.json());
+            if (r.status === "sent") {
+              btn.textContent = "SENT!";
+              this.reset();
+              setTimeout(() => {
+                btn.textContent = "SEND MESSAGE";
+                btn.disabled = false;
+              }, 3000);
+            } else {
+              btn.textContent = "ERROR — TRY AGAIN";
+              btn.disabled = false;
+            }
+          } catch {
+            btn.textContent = "ERROR — TRY AGAIN";
+            btn.disabled = false;
+          }
+        });
+
+      const STATIC = '{{ url_for("static", filename="") }}';
+
+      async function syncAbout() {
+        try {
+          const d = await fetch("/api/about").then((r) => r.json());
+          if (d.hero_tag)
+            document.getElementById("hero-tag").textContent = d.hero_tag;
+          if (d.hero_desc)
+            document.getElementById("T2").textContent = d.hero_desc;
+          if (d.role)
+            document.getElementById("about-role").textContent = d.role;
+          if (d.exp_hours)
+            document.getElementById("exp-num").dataset.target = d.exp_hours;
+          const badge = document.getElementById("available-badge");
+          if (d.available) badge.classList.remove("hidden");
+          else badge.classList.add("hidden");
+          if (d.profile_url) {
+            document.getElementById("profile").style.backgroundImage =
+              `url('${d.profile_url}')`;
+          }
+          if (d.theme === "day") document.body.classList.add("day");
+          else document.body.classList.remove("day");
+          if (d.name) document.getElementById('about-name').textContent = d.name;
+          if (d.email) {
+            const emailEl = document.getElementById('contact-email');
+            if (emailEl) {
+              emailEl.href = 'mailto:' + d.email;
+              emailEl.querySelector('span').textContent = d.email;
+            }
+          }
+          if (d.phone) {
+            const phoneEl = document.getElementById('contact-phone');
+            if (phoneEl) {
+              phoneEl.href = 'tel:' + d.phone.replace(/\s/g, '');
+              phoneEl.querySelector('span').textContent = d.phone;
+            }
+          }
+          if (d.showreel) {
+            const iframe = document.getElementById('myVideo2');
+            if (iframe) iframe.dataset.src = d.showreel;
+          }
+          const sl = d.social_links || {};
+          const linkMap = {
+            'one':   sl.linkedin,
+            'two':   sl.vimeo,
+            'three': sl.resume,
+            'four':  sl.artstation,
+            'five':  sl.instagram,
+          };
+          Object.entries(linkMap).forEach(([id, url]) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (url) { el.href = url; el.style.display = ''; }
+            else el.style.display = 'none';
+          });
+          if (d.cards && d.cards.length) {
+            const wrap = document.getElementById("about-cards");
+            wrap.innerHTML = d.cards
+              .map(
+                (c) => `
             <div class="about-card reveal">
               <i class="${c.icon}"></i>
               <div><div class="card-title">${c.title}</div><div class="card-text">${c.text}</div></div>
-            </div>`).join('');
-          wrap.querySelectorAll('.reveal').forEach((el, i) => {
-            el.style.transitionDelay = (i % 5) * 0.12 + 's';
-            if (typeof revealObserver !== 'undefined') revealObserver.observe(el);
-          });
+            </div>`,
+              )
+              .join("");
+            wrap.querySelectorAll(".reveal").forEach((el, i) => {
+              el.style.transitionDelay = (i % 5) * 0.12 + "s";
+              if (typeof revealObserver !== "undefined")
+                revealObserver.observe(el);
+            });
+          }
+        } catch (e) {
+          console.warn("About sync skipped:", e);
         }
-      } catch(e) { console.warn('About sync skipped:', e); }
-    }
+      }
 
-    async function syncSkills() {
-      try {
-        const skills = await fetch('/api/skills').then(r => r.json());
-        const grid = document.getElementById('skills-grid');
-        if (!skills.length) { document.getElementById('S_skills').style.display = 'none'; return; }
-        grid.innerHTML = skills.map(s => `
+      async function syncSkills() {
+        try {
+          const skills = await fetch("/api/skills").then((r) => r.json());
+          const grid = document.getElementById("skills-grid");
+          if (!skills.length) {
+            document.getElementById("S_skills").style.display = "none";
+            return;
+          }
+          grid.innerHTML = skills
+            .map(
+              (s) => `
           <div class="skill-item reveal">
             <div class="skill-header">
               <span class="skill-name">${s.name}</span>
               <span class="skill-pct">${s.level}%</span>
             </div>
             <div class="skill-track"><div class="skill-bar" data-level="${s.level}"></div></div>
-          </div>`).join('');
-        const barObserver = new IntersectionObserver(entries => {
-          entries.forEach(e => {
-            if (e.isIntersecting) { e.target.style.width = e.target.dataset.level + '%'; barObserver.unobserve(e.target); }
+          </div>`,
+            )
+            .join("");
+          const barObserver = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((e) => {
+                if (e.isIntersecting) {
+                  e.target.style.width = e.target.dataset.level + "%";
+                  barObserver.unobserve(e.target);
+                }
+              });
+            },
+            { threshold: 0.3 },
+          );
+          grid
+            .querySelectorAll(".skill-bar")
+            .forEach((b) => barObserver.observe(b));
+          grid.querySelectorAll(".reveal").forEach((el, i) => {
+            el.style.transitionDelay = (i % 6) * 0.08 + "s";
+            if (typeof revealObserver !== "undefined")
+              revealObserver.observe(el);
           });
-        }, { threshold: 0.3 });
-        grid.querySelectorAll('.skill-bar').forEach(b => barObserver.observe(b));
-        grid.querySelectorAll('.reveal').forEach((el, i) => {
-          el.style.transitionDelay = (i % 6) * 0.08 + 's';
-          if (typeof revealObserver !== 'undefined') revealObserver.observe(el);
-        });
-      } catch(e) { console.warn('Skills sync skipped:', e); }
-    }
+        } catch (e) {
+          console.warn("Skills sync skipped:", e);
+        }
+      }
 
-    function buildTagFilter(items) {
-      const allTags = ['ALL', ...new Set(items.flatMap(w => w.tags || []))];
-      const wrap = document.getElementById('tag-filter');
-      wrap.innerHTML = allTags.map(t =>
-        `<button class="tag-pill${t === 'ALL' ? ' active' : ''}" data-tag="${t}">${t}</button>`
-      ).join('');
-      wrap.addEventListener('click', e => {
-        const pill = e.target.closest('.tag-pill');
-        if (!pill) return;
-        wrap.querySelectorAll('.tag-pill').forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-        const tag = pill.dataset.tag;
-        document.querySelectorAll('#work-grid .work-card').forEach(card => {
-          const cardTags = (card.dataset.tags || '').split(',');
-          card.classList.toggle('hidden-by-filter', tag !== 'ALL' && !cardTags.includes(tag));
+      function buildTagFilter(items) {
+        const allTags = ["ALL", ...new Set(items.flatMap((w) => w.tags || []))];
+        const wrap = document.getElementById("tag-filter");
+        wrap.innerHTML = allTags
+          .map(
+            (t) =>
+              `<button class="tag-pill${t === "ALL" ? " active" : ""}" data-tag="${t}">${t}</button>`,
+          )
+          .join("");
+        wrap.addEventListener("click", (e) => {
+          const pill = e.target.closest(".tag-pill");
+          if (!pill) return;
+          wrap
+            .querySelectorAll(".tag-pill")
+            .forEach((p) => p.classList.remove("active"));
+          pill.classList.add("active");
+          const tag = pill.dataset.tag;
+          document.querySelectorAll("#work-grid .work-card").forEach((card) => {
+            const cardTags = (card.dataset.tags || "").split(",");
+            card.classList.toggle(
+              "hidden-by-filter",
+              tag !== "ALL" && !cardTags.includes(tag),
+            );
+          });
         });
-      });
-    }
+      }
 
-    async function syncWork() {
-      try {
-        const items = await fetch('/api/work').then(r => r.json());
-        const grid = document.getElementById('work-grid');
-        grid.innerHTML = items.map(w => {
-          const tags = (w.tags || []).map(t => `<span>${t}</span>`).join('');
-          const link = w.link ? `<a href="${w.link}" target="_blank" rel="noopener noreferrer" class="wc-link">View on ArtStation <i class="fas fa-arrow-up-right-from-square"></i></a>` : '';
-          return `
-            <div class="work-card reveal" data-vimeo="${w.vimeo}" data-id="${w._id}" data-tags="${(w.tags||[]).join(',')}">
+      async function syncWork() {
+        try {
+          const items = await fetch("/api/work").then((r) => r.json());
+          const grid = document.getElementById("work-grid");
+          grid.innerHTML = items
+            .map((w) => {
+              const tags = (w.tags || [])
+                .map((t) => `<span>${t}</span>`)
+                .join("");
+              const link = w.link
+                ? `<a href="${w.link}" target="_blank" rel="noopener noreferrer" class="wc-link">View on ArtStation <i class="fas fa-arrow-up-right-from-square"></i></a>`
+                : "";
+              return `
+            <div class="work-card reveal" data-vimeo="${w.vimeo}" data-id="${w._id}" data-tags="${(w.tags || []).join(",")}">
               <div class="wc-media">
-                <img src="${w.thumb.startsWith('http') ? w.thumb : STATIC + w.thumb}" class="wc-thumb" alt="${w.title}" />
+                <img src="${w.thumb.startsWith("http") ? w.thumb : STATIC + w.thumb}" class="wc-thumb" alt="${w.title}" />
                 <div class="wc-play"><button class="wc-play-btn" aria-label="Play"><svg viewBox="0 0 24 24" width="32" height="32"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></button></div>
                 <button class="wc-close" aria-label="Close video"><i class="fas fa-times"></i></button>
               </div>
@@ -392,111 +1043,469 @@
                 ${link}
               </div>
             </div>`;
-        }).join('');
-        grid.querySelectorAll('.wc-play-btn').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const card = btn.closest('.work-card');
-            if (card.classList.contains('playing')) return;
-            const id = card.dataset.vimeo;
-            const workId = card.dataset.id;
-            if (workId) fetch(`/api/work/${workId}/view`, { method: 'POST' });
-            const [base, hash] = id.split('?');
-            const src = `https://player.vimeo.com/video/${base}${hash ? '?' + hash + '&' : '?'}autoplay=1&title=0&byline=0&portrait=0`;
-            const iframe = document.createElement('iframe');
-            iframe.src = src; iframe.className = 'wc-iframe';
-            iframe.setAttribute('frameborder', '0');
-            iframe.setAttribute('allow', 'autoplay; picture-in-picture');
-            card.querySelector('.wc-media').appendChild(iframe);
-            card.classList.add('playing');
+            })
+            .join("");
+          grid.querySelectorAll(".wc-play-btn").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const card = btn.closest(".work-card");
+              if (card.classList.contains("playing")) return;
+              const id = card.dataset.vimeo;
+              const workId = card.dataset.id;
+              if (workId) fetch(`/api/work/${workId}/view`, { method: "POST" });
+              const [base, hash] = id.split("?");
+              const src = `https://player.vimeo.com/video/${base}${hash ? "?" + hash + "&" : "?"}autoplay=1&title=0&byline=0&portrait=0`;
+              const iframe = document.createElement("iframe");
+              iframe.src = src;
+              iframe.className = "wc-iframe";
+              iframe.setAttribute("frameborder", "0");
+              iframe.setAttribute("allow", "autoplay; picture-in-picture");
+              card.querySelector(".wc-media").appendChild(iframe);
+              card.classList.add("playing");
+            });
           });
-        });
-        grid.querySelectorAll('.wc-close').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const card = btn.closest('.work-card');
-            card.querySelector('.wc-iframe')?.remove();
-            card.classList.remove('playing');
+          grid.querySelectorAll(".wc-close").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const card = btn.closest(".work-card");
+              card.querySelector(".wc-iframe")?.remove();
+              card.classList.remove("playing");
+            });
           });
-        });
-        grid.querySelectorAll('.reveal').forEach((el, i) => {
-          el.style.transitionDelay = (i % 5) * 0.12 + 's';
-          if (typeof revealObserver !== 'undefined') revealObserver.observe(el);
-        });
-        buildTagFilter(items);
-      } catch(e) { console.warn('Work sync skipped:', e); }
-    }
+          grid.querySelectorAll(".reveal").forEach((el, i) => {
+            el.style.transitionDelay = (i % 5) * 0.12 + "s";
+            if (typeof revealObserver !== "undefined")
+              revealObserver.observe(el);
+          });
+          buildTagFilter(items);
+        } catch (e) {
+          console.warn("Work sync skipped:", e);
+        }
+      }
 
-    async function syncCredits() {
-      try {
-        const cats = await fetch('/api/credits').then(r => r.json());
-        const s4 = document.getElementById('S4');
-        s4.querySelectorAll('.port-category').forEach(el => el.remove());
-        cats.forEach(cat => {
-          const videos = (cat.videos || []).map(v => `
+      async function syncStills() {
+        try {
+          const items = await fetch('/api/stills').then(r => r.json());
+          const grid = document.getElementById('stills-grid');
+          if (!items.length) {
+            document.getElementById('S6').style.display = 'none';
+            return;
+          }
+          grid.innerHTML = items.map((s, i) => `
+            <div class="still-item reveal" data-index="${i}">
+              <img src="${s.url}" alt="${s.caption || 'Still ' + (i + 1)}" loading="lazy" />
+              <div class="still-overlay"><i class="fas fa-expand"></i></div>
+            </div>`).join('');
+          // Override the static lightbox handlers from index.js with dynamic srcs
+          const srcs = items.map(s => s.url);
+          window._stillsSrcs = srcs;
+          window._stillsIndex = 0;
+          const lightbox = document.getElementById('lightbox');
+          const lightboxImg = document.getElementById('lightbox-img');
+          window.openStillLightbox = function(i) {
+            window._stillsIndex = i;
+            lightboxImg.src = srcs[i];
+            lightbox.classList.add('open');
+            document.body.style.overflow = 'hidden';
+          };
+          document.getElementById('lightbox-next').onclick = () => {
+            window._stillsIndex = (window._stillsIndex + 1) % srcs.length;
+            lightboxImg.src = srcs[window._stillsIndex];
+          };
+          document.getElementById('lightbox-prev').onclick = () => {
+            window._stillsIndex = (window._stillsIndex - 1 + srcs.length) % srcs.length;
+            lightboxImg.src = srcs[window._stillsIndex];
+          };
+          document.getElementById('lightbox-close').onclick = () => {
+            lightbox.classList.remove('open');
+            document.body.style.overflow = '';
+          };
+          grid.querySelectorAll('.still-item').forEach((el, i) => {
+            el.addEventListener('click', () => window.openStillLightbox(i));
+            el.style.transitionDelay = (i % 5) * 0.08 + 's';
+            if (typeof revealObserver !== 'undefined') revealObserver.observe(el);
+          });
+        } catch(e) {
+          console.warn('Stills sync skipped:', e);
+        }
+      }
+
+      async function syncCredits() {
+        try {
+          const cats = await fetch("/api/credits").then((r) => r.json());
+          const s4 = document.getElementById("S4");
+          s4.querySelectorAll(".port-category").forEach((el) => el.remove());
+          cats.forEach((cat) => {
+            const videos = (cat.videos || [])
+              .map(
+                (v) => `
             <div class="video-item">
               <div class="video-wrapper"><iframe src="${v.embed}" frameborder="0" allowfullscreen loading="lazy"></iframe></div>
               <div class="video-caption">${v.caption}</div>
-            </div>`).join('');
-          const div = document.createElement('div');
-          div.className = 'port-category reveal';
-          div.innerHTML = `<div class="port-cat-label">${cat.category}</div><div class="port-scroll">${videos}</div>`;
-          s4.appendChild(div);
-          if (typeof revealObserver !== 'undefined') revealObserver.observe(div);
+            </div>`,
+              )
+              .join("");
+            const div = document.createElement("div");
+            div.className = "port-category reveal";
+            div.innerHTML = `<div class="port-cat-label">${cat.category}</div><div class="port-scroll">${videos}</div>`;
+            s4.appendChild(div);
+            if (typeof revealObserver !== "undefined")
+              revealObserver.observe(div);
+          });
+        } catch (e) {
+          console.warn("Credits sync skipped:", e);
+        }
+      }
+
+      // ── RATING SYSTEM ────────────────────────────────────────────────────────────
+      let currentRating = 0;
+
+      // Load current ratings
+      async function loadRatings() {
+        try {
+          const response = await fetch("/api/ratings");
+          const data = await response.json();
+          document.getElementById("rating-value").textContent =
+            data.average.toFixed(1);
+          document.getElementById("rating-count").textContent = data.total;
+        } catch (error) {
+          console.error("Error loading ratings:", error);
+        }
+      }
+
+      // Star rating interaction
+      function initStarRating() {
+        const stars = document.querySelectorAll("#star-rating i");
+        stars.forEach((star) => {
+          star.addEventListener("click", function () {
+            currentRating = parseInt(this.dataset.value);
+            document.getElementById("selected-rating").value = currentRating;
+
+            // Update star display
+            stars.forEach((s, index) => {
+              if (index < currentRating) {
+                s.className = "fas fa-star";
+              } else {
+                s.className = "far fa-star";
+              }
+            });
+
+            document.getElementById("rating-error").style.display = "none";
+          });
+
+          star.addEventListener("mouseenter", function () {
+            const value = parseInt(this.dataset.value);
+            stars.forEach((s, index) => {
+              if (index < value) {
+                s.className = "fas fa-star";
+              } else {
+                s.className = "far fa-star";
+              }
+            });
+          });
         });
-      } catch(e) { console.warn('Credits sync skipped:', e); }
-    }
 
-    syncAbout();
-    syncSkills();
-    syncWork();
-    syncCredits();
-
-    // ── VISITOR NAME PROMPT ────────────────────────────────────────────────────
-    (function () {
-      const STORAGE_KEY  = 'utk_visitor_name';
-      const DISMISSED_KEY = 'utk_visitor_dismissed';
-      const toast = document.getElementById('visitor-toast');
-
-      // Sync localStorage → cookie so server reads it on next page load
-      function syncCookie(name) {
-        const maxAge = 60 * 60 * 24 * 365; // 1 year
-        document.cookie = `utk_vname=${encodeURIComponent(name)};max-age=${maxAge};path=/;SameSite=Lax`;
+        document.querySelectorAll("#star-rating").forEach((container) => {
+          container.addEventListener("mouseleave", function () {
+            stars.forEach((s, index) => {
+              if (index < currentRating) {
+                s.className = "fas fa-star";
+              } else {
+                s.className = "far fa-star";
+              }
+            });
+          });
+        });
       }
 
-      // Patch the LATEST visit row in DB with the name (fixes the very first save)
-      function patchCurrentVisit(name) {
-        fetch('/api/visitor/identify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, referrer: document.referrer || null })
-        }).catch(() => {});
-      }
+      // Show rating modal
+      document.getElementById("rate-us-btn")?.addEventListener("click", () => {
+        const modal = document.getElementById("rating-modal");
+        modal.style.display = "block";
+        document.body.style.overflow = "hidden";
 
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        // Already known — make sure cookie is in sync (e.g. after browser data clear)
-        syncCookie(saved);
-      } else if (!localStorage.getItem(DISMISSED_KEY)) {
-        // First visit — show toast after preloader
-        setTimeout(() => {
-          toast.style.transform = 'translateX(-50%) translateY(0)';
-          document.getElementById('visitor-name-input').focus();
-        }, 4200);
-      }
+        // Reset form
+        currentRating = 0;
+        document.getElementById("selected-rating").value = 0;
+        document.getElementById("reviewer-name").value = "";
+        document.getElementById("review-comment").value = "";
+        document.getElementById("rating-error").style.display = "none";
 
-      window.saveVisitorName = function () {
-        const name = document.getElementById('visitor-name-input').value.trim();
-        if (!name) return;
-        localStorage.setItem(STORAGE_KEY, name);
-        syncCookie(name);          // cookie set → all future page loads logged with name
-        patchCurrentVisit(name);   // patch this visit row too (first save edge case)
-        toast.style.transform = 'translateX(-50%) translateY(120px)';
-      };
+        const stars = document.querySelectorAll("#star-rating i");
+        stars.forEach((star) => (star.className = "far fa-star"));
+      });
 
-      window.dismissVisitorToast = function () {
-        localStorage.setItem(DISMISSED_KEY, '1');
-        toast.style.transform = 'translateX(-50%) translateY(120px)';
-      };
-    })();
+      // Close modal
+      document.querySelector(".modal-close")?.addEventListener("click", () => {
+        document.getElementById("rating-modal").style.display = "none";
+        document.body.style.overflow = "";
+      });
+
+      document
+        .getElementById("rating-modal")
+        ?.addEventListener("click", (e) => {
+          if (e.target === document.getElementById("rating-modal")) {
+            document.getElementById("rating-modal").style.display = "none";
+            document.body.style.overflow = "";
+          }
+        });
+
+      // Submit rating
+      document
+        .getElementById("submit-rating")
+        ?.addEventListener("click", async () => {
+          if (currentRating === 0) {
+            document.getElementById("rating-error").style.display = "block";
+            return;
+          }
+
+          const name = document.getElementById("reviewer-name").value.trim();
+          const comment = document
+            .getElementById("review-comment")
+            .value.trim();
+
+          const button = document.getElementById("submit-rating");
+          const originalText = button.textContent;
+          button.textContent = "Submitting...";
+          button.disabled = true;
+
+          try {
+            const response = await fetch("/api/ratings", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                rating: currentRating,
+                name: name || "Anonymous",
+                comment: comment,
+              }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.status === "submitted") {
+              // Update display
+              document.getElementById("rating-value").textContent =
+                data.average.toFixed(1);
+              document.getElementById("rating-count").textContent = data.total;
+
+              // Show success toast
+              const toast = document.getElementById("rating-toast");
+              toast.style.display = "block";
+              setTimeout(() => {
+                toast.style.display = "none";
+              }, 3000);
+
+              // Close modal
+              document.getElementById("rating-modal").style.display = "none";
+              document.body.style.overflow = "";
+            } else {
+              alert(
+                data.error ||
+                  "Failed to submit rating. Please try again later.",
+              );
+            }
+          } catch (error) {
+            console.error("Error submitting rating:", error);
+            alert("Network error. Please try again.");
+          } finally {
+            button.textContent = originalText;
+            button.disabled = false;
+          }
+        });
+
+      // ── ACCENT COLOR PICKER ───────────────────────────────────────────
+      (function () {
+        const root       = document.documentElement;
+        const STORAGE_KEY = 'utk_accent_v2';
+        let   currentHue = 28; // default orange hue
+
+        const sbCanvas = document.getElementById('picker-canvas');
+        const hCanvas  = document.getElementById('hue-strip');
+        if (!sbCanvas || !hCanvas) return;
+        const sbCtx = sbCanvas.getContext('2d');
+        const hCtx  = hCanvas.getContext('2d');
+
+        // ── draw saturation/brightness square for a given hue ──
+        function drawSB(hue) {
+          const W = sbCanvas.width, H = sbCanvas.height;
+          // white → hue horizontal gradient
+          const gradH = sbCtx.createLinearGradient(0, 0, W, 0);
+          gradH.addColorStop(0,   'white');
+          gradH.addColorStop(1,   `hsl(${hue},100%,50%)`);
+          sbCtx.fillStyle = gradH;
+          sbCtx.fillRect(0, 0, W, H);
+          // transparent → black vertical gradient
+          const gradV = sbCtx.createLinearGradient(0, 0, 0, H);
+          gradV.addColorStop(0,   'rgba(0,0,0,0)');
+          gradV.addColorStop(1,   'rgba(0,0,0,1)');
+          sbCtx.fillStyle = gradV;
+          sbCtx.fillRect(0, 0, W, H);
+        }
+
+        // ── draw hue strip ──
+        function drawHue() {
+          const W = hCanvas.width, H = hCanvas.height;
+          const grad = hCtx.createLinearGradient(0, 0, W, 0);
+          for (let i = 0; i <= 360; i += 30)
+            grad.addColorStop(i / 360, `hsl(${i},100%,50%)`);
+          hCtx.fillStyle = grad;
+          hCtx.fillRect(0, 0, W, H);
+        }
+
+        // ── convert rgb array → hex ──
+        function rgbToHex(r, g, b) {
+          return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
+        }
+
+        // ── lighten a hex color for accent2 ──
+        function lighten(hex, amount = 40) {
+          const r = Math.min(255, parseInt(hex.slice(1,3),16) + amount);
+          const g = Math.min(255, parseInt(hex.slice(3,5),16) + amount);
+          const b = Math.min(255, parseInt(hex.slice(5,7),16) + amount);
+          return rgbToHex(r, g, b);
+        }
+
+        // ── apply color to CSS vars ──
+        function applyColor(hex) {
+          const r = parseInt(hex.slice(1,3),16);
+          const g = parseInt(hex.slice(3,5),16);
+          const b = parseInt(hex.slice(5,7),16);
+          root.style.setProperty('--accent',  hex);
+          root.style.setProperty('--accent2', lighten(hex));
+          root.style.setProperty('--glow',    `rgba(${r},${g},${b},0.35)`);
+        }
+
+        // ── draw cursor dot on SB canvas ──
+        let sbCursor = { x: sbCanvas.width * 0.7, y: sbCanvas.height * 0.3 };
+        function drawCursor() {
+          drawSB(currentHue);
+          sbCtx.beginPath();
+          sbCtx.arc(sbCursor.x, sbCursor.y, 6, 0, Math.PI * 2);
+          sbCtx.strokeStyle = '#fff';
+          sbCtx.lineWidth = 2;
+          sbCtx.stroke();
+        }
+
+        // ── pick color from SB canvas at cursor pos ──
+        function pickSB(x, y) {
+          x = Math.max(0, Math.min(sbCanvas.width  - 1, x));
+          y = Math.max(0, Math.min(sbCanvas.height - 1, y));
+          sbCursor = { x, y };
+          drawCursor();
+          const [r, g, b] = sbCtx.getImageData(x, y, 1, 1).data;
+          const hex = rgbToHex(r, g, b);
+          applyColor(hex);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ hex }));
+        }
+
+        // ── pick hue from hue strip ──
+        function pickHue(x) {
+          x = Math.max(0, Math.min(hCanvas.width - 1, x));
+          currentHue = Math.round((x / hCanvas.width) * 360);
+          drawCursor();
+          pickSB(sbCursor.x, sbCursor.y);
+        }
+
+        // ── drag helpers ──
+        function getPos(canvas, e) {
+          const rect = canvas.getBoundingClientRect();
+          const touch = e.touches?.[0] || e;
+          return {
+            x: (touch.clientX - rect.left) * (canvas.width  / rect.width),
+            y: (touch.clientY - rect.top)  * (canvas.height / rect.height),
+          };
+        }
+
+        function bindDrag(canvas, onMove) {
+          let active = false;
+          const start = (e) => { active = true; const p = getPos(canvas, e); onMove(p.x, p.y); e.preventDefault(); };
+          const move  = (e) => { if (!active) return; const p = getPos(canvas, e); onMove(p.x, p.y); e.preventDefault(); };
+          const end   = () => { active = false; };
+          canvas.addEventListener('mousedown',  start);
+          canvas.addEventListener('mousemove',  move);
+          canvas.addEventListener('touchstart', start, { passive: false });
+          canvas.addEventListener('touchmove',  move,  { passive: false });
+          window.addEventListener('mouseup',   end);
+          window.addEventListener('touchend',  end);
+        }
+
+        bindDrag(sbCanvas, (x, y) => pickSB(x, y));
+        bindDrag(hCanvas,  (x)    => pickHue(x));
+
+        // ── init ──
+        drawHue();
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          try {
+            const { hex } = JSON.parse(saved);
+            applyColor(hex);
+          } catch(e) {}
+        }
+        drawCursor();
+      })();
+
+      loadRatings();
+      initStarRating();
+      syncAbout();
+      syncSkills();
+      syncWork();
+      syncCredits();
+      syncTimeline();
+      syncAwards();
+      syncBlogs();
+      syncLocation();
+      syncStills();
+      fetch('/api/config').then(r => r.json()).then(d => {
+        const k = document.getElementById('web3forms-key');
+        if (k && d.web3forms_key) k.value = d.web3forms_key;
+      }).catch(() => {});
+
+      // ── VISITOR NAME PROMPT ────────────────────────────────────────────────────
+      (function () {
+        const STORAGE_KEY = "utk_visitor_name";
+        const DISMISSED_KEY = "utk_visitor_dismissed";
+        const toast = document.getElementById("visitor-toast");
+
+        // Sync localStorage → cookie so server reads it on next page load
+        function syncCookie(name) {
+          const maxAge = 60 * 60 * 24 * 365; // 1 year
+          document.cookie = `utk_vname=${encodeURIComponent(name)};max-age=${maxAge};path=/;SameSite=Lax`;
+        }
+
+        // Patch the LATEST visit row in DB with the name (fixes the very first save)
+        function patchCurrentVisit(name) {
+          fetch("/api/visitor/identify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, referrer: document.referrer || null }),
+          }).catch(() => {});
+        }
+
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          syncCookie(saved);
+        } else {
+          // No name yet — show toast and keep re-showing until name is saved
+          function showToast() {
+            toast.style.transform = "translateX(-50%) translateY(0)";
+            document.getElementById("visitor-name-input").focus();
+          }
+          setTimeout(showToast, 4200);
+        }
+
+        window.saveVisitorName = function () {
+          const name = document
+            .getElementById("visitor-name-input")
+            .value.trim();
+          if (!name) {
+            document.getElementById("visitor-name-input").style.border =
+              "1px solid #e8622a";
+            return;
+          }
+          localStorage.setItem(STORAGE_KEY, name);
+          syncCookie(name);
+          patchCurrentVisit(name);
+          toast.style.transform = "translateX(-50%) translateY(120px)";
+        };
+      })();
     </script>
   </body>
 </html>
